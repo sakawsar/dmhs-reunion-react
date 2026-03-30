@@ -205,16 +205,16 @@ function App() {
       <Header />
 
       {/* Hero Banner */}
-      <div style={{ width: '100%', maxWidth: '680px', marginTop: '32px', borderRadius: '28px', overflow: 'hidden', background: 'linear-gradient(135deg, #1a0a2e 0%, #0f1a3a 50%, #1a0a1a 100%)', border: '1px solid rgba(108, 99, 255, 0.25)', padding: '36px 40px', position: 'relative' }}>
-        <div style={{ position: 'absolute', top: '-50%', right: '-20%', width: '400px', height: '400px', background: 'radial-gradient(circle, rgba(226,19,110,0.2) 0%, transparent 60%)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: '-30%', left: '-10%', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(108,99,255,0.2) 0%, transparent 60%)', pointerEvents: 'none' }} />
-        <h1 style={{ fontSize: '32px', fontWeight: 800, lineHeight: 1.2, color: '#fff', position: 'relative', zIndex: 1 }}>
+      <div style={{ width: '100%', maxWidth: '680px', marginTop: '28px', borderRadius: '24px', overflow: 'hidden', background: 'linear-gradient(135deg, #f0f2ff 0%, #fff5fa 50%, #f0f9ff 100%)', border: '1.5px solid #e2e8f4', padding: '36px 40px', position: 'relative', boxShadow: '0 2px 16px rgba(91,82,232,0.08)' }}>
+        <div style={{ position: 'absolute', top: '-30%', right: '-10%', width: '320px', height: '320px', background: 'radial-gradient(circle, rgba(226,19,110,0.07) 0%, transparent 60%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: '-20%', left: '-10%', width: '280px', height: '280px', background: 'radial-gradient(circle, rgba(91,82,232,0.07) 0%, transparent 60%)', pointerEvents: 'none' }} />
+        <h1 style={{ fontSize: '30px', fontWeight: 800, lineHeight: 1.2, color: '#1a1f36', position: 'relative', zIndex: 1 }}>
           Welcome Back,{' '}
-          <span style={{ background: 'linear-gradient(90deg, #E2136E, #6c63ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+          <span style={{ background: 'linear-gradient(90deg, #E2136E, #5b52e8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
             DMHS Alumni!
           </span>
         </h1>
-        <p style={{ marginTop: '10px', fontSize: '15px', color: 'var(--color-text-secondary)', position: 'relative', zIndex: 1 }}>
+        <p style={{ marginTop: '10px', fontSize: '15px', color: '#5a6282', position: 'relative', zIndex: 1 }}>
           Join us for an unforgettable evening of memories, laughter, and reconnection with your classmates.
         </p>
         <div style={{ display: 'flex', gap: '10px', marginTop: '20px', flexWrap: 'wrap', position: 'relative', zIndex: 1 }}>
@@ -227,6 +227,7 @@ function App() {
           ))}
         </div>
       </div>
+
 
       {/* Form */}
       <div className="form-wrapper">
