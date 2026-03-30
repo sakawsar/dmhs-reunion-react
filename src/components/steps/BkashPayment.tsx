@@ -9,7 +9,7 @@ interface BkashPaymentProps {
     animClass: string;
 }
 
-const BKASH_MERCHANT_NUMBER = '01712-345678';
+const BKASH_MERCHANT_NUMBER = '01700-000000';
 
 const BkashPayment: React.FC<BkashPaymentProps> = ({ data, errors, onChange, packages, animClass }) => {
     const [copied, setCopied] = useState(false);

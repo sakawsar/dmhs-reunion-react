@@ -879,3 +879,58 @@ textarea {
 .mt-4 {
   margin-top: 16px;
 }
+
+/* ===================== PRINT STYLES ===================== */
+@media print {
+
+  /* Hide non-essential UI */
+  .site-header,
+  .btn-group,
+  .progress-container,
+  .form-subtitle {
+    display: none !important;
+  }
+
+  /* Remove backgrounds and shadows for clean print */
+  body {
+    background: white !important;
+    background-image: none !important;
+  }
+
+  .app-container {
+    padding: 0 !important;
+  }
+
+  .glass-card {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+    padding: 24px !important;
+  }
+
+  /* Make sure confirmation details print clearly */
+  .confirm-details {
+    border: 1px solid #ccc !important;
+  }
+
+  .confirm-row:nth-child(even) {
+    background: #f9f9f9 !important;
+  }
+
+  .ticket-id-box {
+    border: 1.5px dashed #aaa !important;
+    background: #fafafa !important;
+  }
+
+  /* Show ticket ID without gradient (gradients don't print well) */
+  .ticket-id-value {
+    -webkit-text-fill-color: #1a1f36 !important;
+    color: #1a1f36 !important;
+    background: none !important;
+  }
+
+  /* Page layout */
+  .form-wrapper {
+    margin-top: 0 !important;
+    max-width: 100% !important;
+  }
+}
