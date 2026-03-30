@@ -1,0 +1,48 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── registrations collection ──────────────────────────────────────────
+    match /registrations/{docId} {
+
+      // Anyone can CREATE a registration (form submission)
+      // but NOT read, update, or delete their own or others' records.
+      allow create: if
+        // Required string fields must be present and non-empty
+        request.resource.data.ticketId is string &&
+        request.resource.data.ticketId.size() > 0 &&
+        request.resource.data.fullName is string &&
+        request.resource.data.fullName.size() > 0 &&
+        request.resource.data.phone is string &&
+        request.resource.data.phone.size() >= 11 &&
+        request.resource.data.batchYear is string &&
+        request.resource.data.batchYear.size() == 4 &&
+        request.resource.data.bkashTxId is string &&
+        request.resource.data.bkashTxId.size() >= 6 &&
+        request.resource.data.bkashPhone is string &&
+        request.resource.data.bkashPhone.size() >= 11 &&
+
+        // Status must be exactly 'pending_verification' on create
+        request.resource.data.status == 'pending_verification' &&
+
+        // Seats must be a positive integer
+        request.resource.data.seats is int &&
+        request.resource.data.seats >= 1 &&
+        request.resource.data.seats <= 10 &&
+
+        // totalAmount must be a positive number
+        request.resource.data.totalAmount is number &&
+        request.resource.data.totalAmount > 0;
+
+      // Nobody can read, update, or delete from the client side.
+      // Use Firebase Admin SDK (or Firebase Console) for admin access.
+      allow read, update, delete: if false;
+    }
+
+    // Block all other collections by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
