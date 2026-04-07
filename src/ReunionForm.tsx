@@ -9,22 +9,21 @@ import type { FormData, FormErrors, Package } from './components/types';
 import { saveRegistration, resolvePackage } from './lib/registrationService';
 
 const PACKAGES: Package[] = [
-    { id: 'single', name: 'Individual', price: 800, description: '1 person · Dinner & Program', icon: '🧑' },
-    { id: 'couple', name: 'Couple', price: 1400, description: '2 persons · Dinner & Program', icon: '👫', popular: true },
-    { id: 'family', name: 'Family', price: 2200, description: 'Up to 4 persons · Full package', icon: '👨‍👩‍👧‍👦' },
-    { id: 'vip', name: 'VIP', price: 3500, description: '1 person · VIP lounge + gifts', icon: '👑' },
+    { id: 'single', name: 'একক', price: 1000, description: '১ জন · ডিনার ও অনুষ্ঠান', icon: '🧑' },
+    { id: 'couple', name: 'দম্পতি', price: 1500, description: '২ জন · ডিনার ও অনুষ্ঠান', icon: '👫', popular: true },
+    { id: 'family', name: 'পরিবার', price: 2200, description: '৪ জন পর্যন্ত · সম্পূর্ণ প্যাকেজ', icon: '👨‍👩‍👧‍👦' },
 ];
 
 const STEPS = [
-    { label: 'Personal', icon: '1' },
-    { label: 'Attendance', icon: '2' },
-    { label: 'Payment', icon: '3' },
-    { label: 'Confirm', icon: '4' },
+    { label: 'ব্যক্তিগত', icon: '1' },
+    { label: 'উপস্থিতি', icon: '2' },
+    { label: 'পেমেন্ট', icon: '3' },
+    { label: 'নিশ্চিত', icon: '4' },
 ];
 
 const INITIAL_FORM: FormData = {
     fullName: '', batchYear: '', section: '', phone: '', email: '',
-    currentCity: '', profession: '', packageId: 'couple', seats: 1,
+    currentCity: '', profession: '', bloodGroup: '', packageId: 'couple', seats: 1,
     guestNames: '', dietaryPref: 'no-preference', specialRequests: '',
     bkashTxId: '', bkashPhone: '',
 };
@@ -54,24 +53,24 @@ export default function ReunionForm() {
     const validateStep = (currentStep: number): boolean => {
         const newErrors: FormErrors = {};
         if (currentStep === 0) {
-            if (!formData.fullName.trim()) newErrors.fullName = 'Full name is required';
-            if (!formData.batchYear) newErrors.batchYear = 'Please select your batch year';
-            if (!formData.phone.trim()) newErrors.phone = 'Phone number is required';
+            if (!formData.fullName.trim()) newErrors.fullName = 'পূর্ণ নাম আবশ্যক';
+            if (!formData.batchYear) newErrors.batchYear = 'অনুগ্রহ করে ব্যাচ সাল নির্বাচন করুন';
+            if (!formData.phone.trim()) newErrors.phone = 'ফোন নম্বর আবশ্যক';
             else if (!/^01[3-9]\d{8}$/.test(formData.phone.replace(/\s|-/g, '')))
-                newErrors.phone = 'Enter a valid Bangladeshi phone number';
+                newErrors.phone = 'একটি সঠিক বাংলাদেশি ফোন নম্বর দিন';
             if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
-                newErrors.email = 'Please enter a valid email address';
-            if (!formData.currentCity.trim()) newErrors.currentCity = 'Current city is required';
+                newErrors.email = 'একটি সঠিক ইমেইল ঠিকানা দিন';
+            if (!formData.currentCity.trim()) newErrors.currentCity = 'বর্তমান ঠিকানা আবশ্যক';
         }
         if (currentStep === 1) {
-            if (!formData.packageId) newErrors.packageId = 'Please select a package';
+            if (!formData.packageId) newErrors.packageId = 'অনুগ্রহ করে একটি প্যাকেজ নির্বাচন করুন';
         }
         if (currentStep === 2) {
-            if (!formData.bkashTxId.trim()) newErrors.bkashTxId = 'Transaction ID is required';
-            else if (formData.bkashTxId.trim().length < 6) newErrors.bkashTxId = 'Transaction ID seems too short';
-            if (!formData.bkashPhone.trim()) newErrors.bkashPhone = 'Sender phone number is required';
+            if (!formData.bkashTxId.trim()) newErrors.bkashTxId = 'ট্রানজেকশন আইডি আবশ্যক';
+            else if (formData.bkashTxId.trim().length < 6) newErrors.bkashTxId = 'ট্রানজেকশন আইডি খুব ছোট মনে হচ্ছে';
+            if (!formData.bkashPhone.trim()) newErrors.bkashPhone = 'প্রেরকের ফোন নম্বর আবশ্যক';
             else if (!/^01[3-9]\d{8}$/.test(formData.bkashPhone.replace(/\s|-/g, '')))
-                newErrors.bkashPhone = 'Enter a valid bKash sender number';
+                newErrors.bkashPhone = 'একটি সঠিক বিকাশ প্রেরকের নম্বর দিন';
         }
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -95,7 +94,7 @@ export default function ReunionForm() {
             setStep(s => Math.min(s + 1, STEPS.length - 1));
         } catch (err) {
             console.error('Firestore save error:', err);
-            setSubmitError('Failed to submit registration. Please check your connection and try again.');
+            setSubmitError('রেজিস্ট্রেশন জমা দিতে ব্যর্থ হয়েছে। অনুগ্রহ করে আপনার ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।');
         } finally {
             setIsSubmitting(false);
         }
@@ -122,13 +121,14 @@ export default function ReunionForm() {
             <div style={{ width: '100%', maxWidth: '680px', marginTop: '28px', borderRadius: '24px', overflow: 'hidden', background: 'linear-gradient(135deg, #f0f2ff 0%, #fff5fa 50%, #f0f9ff 100%)', border: '1.5px solid #e2e8f4', padding: '28px 36px', position: 'relative', boxShadow: '0 2px 16px rgba(91,82,232,0.08)' }}>
                 <div style={{ position: 'absolute', top: '-30%', right: '-10%', width: '260px', height: '260px', background: 'radial-gradient(circle, rgba(226,19,110,0.07) 0%, transparent 60%)', pointerEvents: 'none' }} />
                 <h1 style={{ fontSize: '24px', fontWeight: 800, color: '#1a1f36', margin: 0, position: 'relative', zIndex: 1 }}>
-                    Complete Your{' '}
+                    আপনার{' '}
                     <span style={{ background: 'linear-gradient(90deg, #E2136E, #5b52e8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                        Registration
+                        রেজিস্ট্রেশন
                     </span>
+                    {' '}সম্পন্ন করুন
                 </h1>
                 <p style={{ marginTop: '6px', fontSize: '13px', color: '#5a6282', position: 'relative', zIndex: 1 }}>
-                    📅 28 May 2026 · 📍 School Field · Pay securely via bKash
+                    📅 ২৮ মে ২০২৬ · 📍 স্কুল মাঠ · বিকাশে নিরাপদ পেমেন্ট
                 </p>
             </div>
 
@@ -147,7 +147,7 @@ export default function ReunionForm() {
                     {step < STEPS.length - 1 && (
                         <div className="btn-group">
                             {step > 0 ? (
-                                <button className="btn-secondary" onClick={handleBack} disabled={isSubmitting} style={{ opacity: isSubmitting ? 0.5 : 1 }}>← Back</button>
+                                <button className="btn-secondary" onClick={handleBack} disabled={isSubmitting} style={{ opacity: isSubmitting ? 0.5 : 1 }}>← পিছনে</button>
                             ) : <span />}
                             <button
                                 className={`btn-primary ${step === 2 ? 'btn-bkash' : ''}`}
@@ -155,7 +155,7 @@ export default function ReunionForm() {
                                 disabled={isSubmitting}
                                 style={{ opacity: isSubmitting ? 0.85 : 1, minWidth: '180px' }}
                             >
-                                {step === 2 ? (isSubmitting ? '⏳ Saving…' : '✓ Submit Registration') : 'Continue →'}
+                                {step === 2 ? (isSubmitting ? '⏳ সেভ হচ্ছে…' : '✓ রেজিস্ট্রেশন জমা দিন') : 'পরবর্তী →'}
                             </button>
                         </div>
                     )}
@@ -163,8 +163,8 @@ export default function ReunionForm() {
             </div>
 
             <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '13px', color: 'var(--color-text-muted)', lineHeight: '1.8' }}>
-                <div>🏫 Dharmeswar Mohesha B/L High School Alumni Association</div>
-                <div>For help, call <a href="tel:01700000000" style={{ color: 'var(--color-accent)' }}>01700-000000</a> · reunion@dmhs.edu.bd</div>
+                <div>🏫 ধর্মেশ্বর মহেশা বি/এল হাই স্কুল প্রাক্তন ছাত্র সমিতি</div>
+                <div>সাহায্যের জন্য কল করুন <a href="tel:01700000000" style={{ color: 'var(--color-accent)' }}>০১৭০০-০০০০০০</a> · reunion@dmhs.edu.bd</div>
             </div>
         </div>
     );

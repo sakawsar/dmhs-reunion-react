@@ -8,21 +8,21 @@ interface PersonalInfoProps {
     animClass: string;
 }
 
-const BATCH_YEARS = Array.from({ length: 35 }, (_, i) => 2024 - i).map(y => y.toString());
+const BATCH_YEARS = Array.from({ length: 35 }, (_, i) => 2025 - i).map(y => y.toString());
 
 const PersonalInfo: React.FC<PersonalInfoProps> = ({ data, errors, onChange, animClass }) => {
     return (
         <div className={animClass}>
-            <div className="form-title">Personal Information</div>
-            <div className="form-subtitle">Tell us about yourself so we can prepare your registration.</div>
+            <div className="form-title">ব্যক্তিগত তথ্য</div>
+            <div className="form-subtitle">আপনার রেজিস্ট্রেশন প্রস্তুত করতে আপনার সম্পর্কে জানান।</div>
 
             <div className="form-group">
-                <label htmlFor="fullName">Full Name <span className="required">*</span></label>
+                <label htmlFor="fullName">পূর্ণ নাম <span className="required">*</span></label>
                 <input
                     id="fullName"
                     type="text"
                     className={errors.fullName ? 'error' : ''}
-                    placeholder="e.g. Md. Rahim Uddin"
+                    placeholder="যেমন: মো. রহিম উদ্দিন"
                     value={data.fullName}
                     onChange={e => onChange('fullName', e.target.value)}
                 />
@@ -31,14 +31,14 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ data, errors, onChange, ani
 
             <div className="form-row">
                 <div className="form-group">
-                    <label htmlFor="batchYear">Batch / Passing Year <span className="required">*</span></label>
+                    <label htmlFor="batchYear">ব্যাচ / পাশের সাল <span className="required">*</span></label>
                     <select
                         id="batchYear"
                         className={errors.batchYear ? 'error' : ''}
                         value={data.batchYear}
                         onChange={e => onChange('batchYear', e.target.value)}
                     >
-                        <option value="">Select Year</option>
+                        <option value="">সাল নির্বাচন করুন</option>
                         {BATCH_YEARS.map(y => (
                             <option key={y} value={y}>{y}</option>
                         ))}
@@ -47,28 +47,28 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ data, errors, onChange, ani
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="section">Section / Group</label>
+                    <label htmlFor="section">শাখা / বিভাগ</label>
                     <select
                         id="section"
                         value={data.section}
                         onChange={e => onChange('section', e.target.value)}
                     >
-                        <option value="">Select Section</option>
-                        <option value="Science">Science</option>
-                        <option value="Commerce">Commerce</option>
-                        <option value="Arts">Arts</option>
+                        <option value="">শাখা নির্বাচন করুন</option>
+                        <option value="Science">বিজ্ঞান</option>
+                        <option value="Commerce">বাণিজ্য</option>
+                        <option value="Arts">মানবিক</option>
                     </select>
                 </div>
             </div>
 
             <div className="form-row">
                 <div className="form-group">
-                    <label htmlFor="phone">Phone Number <span className="required">*</span></label>
+                    <label htmlFor="phone">ফোন নম্বর <span className="required">*</span></label>
                     <input
                         id="phone"
                         type="tel"
                         className={errors.phone ? 'error' : ''}
-                        placeholder="e.g. 01XXXXXXXXX"
+                        placeholder="যেমন: ০১XXXXXXXXX"
                         value={data.phone}
                         onChange={e => onChange('phone', e.target.value)}
                     />
@@ -76,7 +76,7 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ data, errors, onChange, ani
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="email">Email Address</label>
+                    <label htmlFor="email">ইমেইল ঠিকানা</label>
                     <input
                         id="email"
                         type="email"
@@ -90,12 +90,12 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ data, errors, onChange, ani
             </div>
 
             <div className="form-group">
-                <label htmlFor="currentCity">Current City / Country <span className="required">*</span></label>
+                <label htmlFor="currentCity">বর্তমান ঠিকানা <span className="required">*</span></label>
                 <input
                     id="currentCity"
                     type="text"
                     className={errors.currentCity ? 'error' : ''}
-                    placeholder="e.g. Dhaka, Bangladesh"
+                    placeholder="যেমন: ঢাকা, বাংলাদেশ"
                     value={data.currentCity}
                     onChange={e => onChange('currentCity', e.target.value)}
                 />
@@ -103,13 +103,24 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ data, errors, onChange, ani
             </div>
 
             <div className="form-group">
-                <label htmlFor="profession">Current Profession</label>
+                <label htmlFor="profession">বর্তমান পেশা</label>
                 <input
                     id="profession"
                     type="text"
-                    placeholder="e.g. Software Engineer, Doctor, Business Owner"
+                    placeholder="যেমন: সফটওয়্যার ইঞ্জিনিয়ার, ডাক্তার, ব্যবসায়ী"
                     value={data.profession}
                     onChange={e => onChange('profession', e.target.value)}
+                />
+            </div>
+
+            <div className="form-group">
+                <label htmlFor="bloodGroup">রক্তের গ্রুপ</label>
+                <input
+                    id="bloodGroup"
+                    type="text"
+                    placeholder="যেমন: B+, O-"
+                    value={data.bloodGroup || ''}
+                    onChange={e => onChange('bloodGroup', e.target.value)}
                 />
             </div>
         </div>

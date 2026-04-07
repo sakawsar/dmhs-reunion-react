@@ -14,25 +14,25 @@ const Confirmation: React.FC<ConfirmationProps> = ({ data, packages, ticketId, f
     const totalAmount = (selectedPackage?.price ?? 0) * (Number(data.seats) || 1);
 
     const rows = [
-        { key: 'Full Name', val: data.fullName },
-        { key: 'Batch Year', val: data.batchYear },
-        { key: 'Phone', val: data.phone },
-        { key: 'Email', val: data.email || '—' },
-        { key: 'City', val: data.currentCity },
-        { key: 'Package', val: selectedPackage ? `${selectedPackage.icon} ${selectedPackage.name}` : '—' },
-        { key: 'Seats', val: `${data.seats}` },
-        { key: 'Dietary Pref', val: data.dietaryPref || 'No Preference' },
-        { key: 'bKash TxID', val: data.bkashTxId },
-        { key: 'Total Paid', val: `৳${totalAmount.toLocaleString()}`, highlight: true },
+        { key: 'পূর্ণ নাম', val: data.fullName },
+        { key: 'ব্যাচ', val: data.batchYear },
+        { key: 'ফোন', val: data.phone },
+        { key: 'ইমেইল', val: data.email || '—' },
+        { key: 'ঠিকানা', val: data.currentCity },
+        { key: 'প্যাকেজ', val: selectedPackage ? `${selectedPackage.icon} ${selectedPackage.name}` : '—' },
+        { key: 'আসন সংখ্যা', val: `${data.seats}` },
+        { key: 'খাবারের পছন্দ', val: data.dietaryPref || 'কোনো পছন্দ নেই' },
+        { key: 'বিকাশ TxID', val: data.bkashTxId },
+        { key: 'মোট পরিশোধ', val: `৳${totalAmount.toLocaleString()}`, highlight: true },
     ];
 
     return (
         <div className={animClass}>
             <div className="confirm-icon">✅</div>
-            <div className="confirm-title">Registration Submitted!</div>
+            <div className="confirm-title">রেজিস্ট্রেশন জমা হয়েছে!</div>
             <div className="confirm-subtitle">
-                Thank you, <strong>{data.fullName.split(' ')[0]}</strong>! Your registration is under review.<br />
-                We'll confirm via SMS/email within <strong>24 hours</strong> after verifying your payment.
+                ধন্যবাদ, <strong>{data.fullName.split(' ')[0]}</strong>! আপনার রেজিস্ট্রেশন পর্যালোচনাধীন আছে।<br />
+                পেমেন্ট যাচাইয়ের পর <strong>২৪ ঘণ্টার</strong> মধ্যে SMS/ইমেইলে নিশ্চিতকরণ পাবেন।
             </div>
 
             <div className="confirm-details">
@@ -45,14 +45,14 @@ const Confirmation: React.FC<ConfirmationProps> = ({ data, packages, ticketId, f
             </div>
 
             <div className="ticket-id-box">
-                <div className="ticket-id-label">Your Ticket Reference ID</div>
+                <div className="ticket-id-label">আপনার টিকেট রেফারেন্স আইডি</div>
                 <div className="ticket-id-value">{ticketId}</div>
                 <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', marginTop: '6px' }}>
-                    Save this ID — you may need it at the event entrance
+                    এই আইডি সংরক্ষণ করুন — অনুষ্ঠানের প্রবেশদ্বারে এটি প্রয়োজন হতে পারে
                 </div>
                 {firestoreDocId && (
                     <div style={{ fontSize: '10px', color: 'var(--color-text-muted)', marginTop: '8px', letterSpacing: '0.04em' }}>
-                        📄 Registration ID: <span style={{ fontFamily: 'monospace', color: 'var(--color-text-secondary)' }}>{firestoreDocId}</span>
+                        📄 রেজিস্ট্রেশন আইডি: <span style={{ fontFamily: 'monospace', color: 'var(--color-text-secondary)' }}>{firestoreDocId}</span>
                     </div>
                 )}
             </div>
@@ -63,7 +63,7 @@ const Confirmation: React.FC<ConfirmationProps> = ({ data, packages, ticketId, f
                     onClick={() => window.print()}
                     style={{ margin: '0 auto' }}
                 >
-                    🖨 Print / Save as PDF
+                    🖨 প্রিন্ট / PDF সংরক্ষণ
                 </button>
             </div>
 
@@ -74,9 +74,9 @@ const Confirmation: React.FC<ConfirmationProps> = ({ data, packages, ticketId, f
                 color: 'var(--color-text-muted)',
                 lineHeight: '1.7'
             }}>
-                Questions? Contact us at{' '}
-                <a href="tel:01700000000" style={{ color: 'var(--color-accent)' }}>01700-000000</a>
-                {' '}or{' '}
+                প্রশ্ন? যোগাযোগ করুন{' '}
+                <a href="tel:01700000000" style={{ color: 'var(--color-accent)' }}>০১৭০০-০০০০০০</a>
+                {' '}অথবা{' '}
                 <a href="mailto:reunion@dmhs.edu.bd" style={{ color: 'var(--color-accent)' }}>reunion@dmhs.edu.bd</a>
             </div>
         </div>

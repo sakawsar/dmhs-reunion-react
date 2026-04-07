@@ -33,6 +33,7 @@ export async function saveRegistration(
         email: formData.email || null,
         currentCity: formData.currentCity,
         profession: formData.profession || null,
+        bloodGroup: formData.bloodGroup || null,
 
         // Attendance
         seats: formData.seats,

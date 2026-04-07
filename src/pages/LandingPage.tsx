@@ -1,8 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+import { db } from '../lib/firebase';
 
 // Countdown to 28 May 2026 at 18:00 BDT (UTC+6)
 const EVENT_DATE = new Date('2026-05-28T18:00:00+06:00');
+
+interface RegSummary {
+    fullName: string;
+    batchYear: string;
+    currentCity: string;
+    packageName: string;
+    seats: number;
+    status: string;
+    submittedAt: { seconds: number } | null;
+}
 
 function useCountdown(target: Date) {
     const calc = () => {
@@ -24,32 +36,99 @@ function useCountdown(target: Date) {
 }
 
 const SCHEDULE = [
-    { time: '04:00 PM', title: 'Gates Open', desc: 'Registration & welcome desk opens. Collect your name badge.' },
-    { time: '05:00 PM', title: 'Inauguration Program', desc: 'Welcome speech by the principal & chief guest.' },
-    { time: '05:45 PM', title: 'Cultural Performance', desc: 'Music, poetry, and performances by former students.' },
-    { time: '07:00 PM', title: 'Grand Dinner', desc: 'Buffet dinner for all registered alumni and guests.' },
-    { time: '08:30 PM', title: 'Golden Memories Segment', desc: 'Photo slideshow, batch-wise shoutouts & reminiscing.' },
-    { time: '09:30 PM', title: 'Prize Giving & Closing', desc: 'Awards for special contributions & closing ceremony.' },
+    { time: '০৪:০০ PM', title: 'গেইট খোলা', desc: 'রেজিস্ট্রেশন ও স্বাগত ডেস্ক খোলা হবে। আপনার নেইম ব্যাজ সংগ্রহ করুন।' },
+    { time: '০৫:০০ PM', title: 'উদ্বোধনী অনুষ্ঠান', desc: 'প্রধান শিক্ষক ও প্রধান অতিথির স্বাগত ভাষণ।' },
+    { time: '০৫:৪৫ PM', title: 'সাংস্কৃতিক অনুষ্ঠান', desc: 'প্রাক্তন ছাত্রদের গান, কবিতা ও পরিবেশনা।' },
+    { time: '০৭:০০ PM', title: 'গ্র্যান্ড ডিনার', desc: 'সকল নিবন্ধিত প্রাক্তন ছাত্র ও অতিথিদের জন্য বুফে ডিনার।' },
+    { time: '০৮:৩০ PM', title: 'স্মৃতিচারণ', desc: 'ফটো স্লাইডশো, ব্যাচভিত্তিক শুভেচ্ছা ও স্মৃতিচারণ।' },
+    { time: '০৯:৩০ PM', title: 'পুরস্কার বিতরণ ও সমাপনী', desc: 'বিশেষ অবদানের জন্য পুরস্কার ও সমাপনী অনুষ্ঠান।' },
 ];
 
 const PACKAGES_INFO = [
-    { icon: '🧑', name: 'Individual', price: '৳800', desc: '1 person · Dinner + full program', color: '#5b52e8' },
-    { icon: '👫', name: 'Couple', price: '৳1,400', desc: '2 persons · Dinner + full program', color: '#E2136E', popular: true },
-    { icon: '👨‍👩‍👧‍👦', name: 'Family', price: '৳2,200', desc: 'Up to 4 persons · Full package', color: '#15a96a' },
-    { icon: '👑', name: 'VIP', price: '৳3,500', desc: '1 person · Lounge access + gifts', color: '#d97706' },
+    { icon: '🧑', name: 'একক', price: '৳১,০০০', desc: '১ জন · ডিনার + সম্পূর্ণ অনুষ্ঠান', color: '#5b52e8' },
+    { icon: '👫', name: 'দম্পতি', price: '৳১,৫০০', desc: '২ জন · ডিনার + সম্পূর্ণ অনুষ্ঠান', color: '#E2136E', popular: true },
+    { icon: '👨‍👩‍👧‍👦', name: 'পরিবার', price: '৳২,২০০', desc: '৪ জন পর্যন্ত · সম্পূর্ণ প্যাকেজ', color: '#15a96a' },
 ];
 
 const FAQ = [
-    { q: 'How do I register?', a: 'Click the "Register Now" button, fill in your details across 4 steps, and complete the bKash payment.' },
-    { q: 'When will I get confirmation?', a: 'Within 24 hours of your bKash payment being verified by our team.' },
-    { q: 'Can I bring my family?', a: 'Yes! Choose the Couple or Family package during registration.' },
-    { q: 'What if I pay but don\'t receive confirmation?', a: 'Contact us at 01700-000000 with your bKash Transaction ID.' },
-    { q: 'Is there parking available?', a: 'Yes, parking is available at the school field premises.' },
+    { q: 'কিভাবে রেজিস্ট্রেশন করবো?', a: '"এখনই রেজিস্ট্রেশন করুন" বাটনে ক্লিক করুন, ৪টি ধাপে আপনার তথ্য পূরণ করুন এবং বিকাশে পেমেন্ট সম্পন্ন করুন।' },
+    { q: 'কনফার্মেশন কখন পাবো?', a: 'আপনার বিকাশ পেমেন্ট যাচাই করার ২৪ ঘণ্টার মধ্যে।' },
+    { q: 'পরিবার নিয়ে আসতে পারবো?', a: 'হ্যাঁ! রেজিস্ট্রেশনের সময় দম্পতি বা পরিবার প্যাকেজ বেছে নিন।' },
+    { q: 'পেমেন্ট করেছি কিন্তু কনফার্মেশন পাইনি?', a: 'আপনার বিকাশ ট্রানজেকশন আইডি সহ ০১৭০০-০০০০০০ নম্বরে যোগাযোগ করুন।' },
+    { q: 'পার্কিং সুবিধা আছে?', a: 'হ্যাঁ, স্কুল মাঠ প্রাঙ্গণে পার্কিং সুবিধা আছে।' },
 ];
 
 export default function LandingPage() {
     const { days, hours, minutes, seconds } = useCountdown(EVENT_DATE);
     const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+    // Registration data for overview
+    const [regs, setRegs] = useState<RegSummary[]>([]);
+    const [regsLoading, setRegsLoading] = useState(true);
+    const [regSearch, setRegSearch] = useState('');
+    const [regBatchFilter, setRegBatchFilter] = useState('all');
+    const [regSortKey, setRegSortKey] = useState<'fullName' | 'batchYear' | 'submittedAt'>('submittedAt');
+    const [regSortDir, setRegSortDir] = useState<'asc' | 'desc'>('desc');
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                const q = query(collection(db, 'registrations'), orderBy('submittedAt', 'desc'));
+                const snap = await getDocs(q);
+                setRegs(snap.docs.map(d => {
+                    const data = d.data();
+                    return {
+                        fullName: data.fullName || '',
+                        batchYear: data.batchYear || '',
+                        currentCity: data.currentCity || '',
+                        packageName: data.packageName || '',
+                        seats: data.seats || 1,
+                        status: data.status || '',
+                        submittedAt: data.submittedAt || null,
+                    };
+                }));
+            } catch {
+                // silently fail for public page
+            } finally {
+                setRegsLoading(false);
+            }
+        };
+        load();
+    }, []);
+
+    const batches = useMemo(() => [...new Set(regs.map(r => r.batchYear))].sort().reverse(), [regs]);
+
+    const stats = useMemo(() => ({
+        total: regs.length,
+        confirmed: regs.filter(r => r.status === 'confirmed').length,
+        pending: regs.filter(r => r.status === 'pending_verification').length,
+        totalSeats: regs.reduce((s, r) => s + (r.seats || 1), 0),
+    }), [regs]);
+
+    const filteredRegs = useMemo(() => {
+        let out = [...regs];
+        if (regSearch) out = out.filter(r => r.fullName.toLowerCase().includes(regSearch.toLowerCase()) || r.batchYear.includes(regSearch));
+        if (regBatchFilter !== 'all') out = out.filter(r => r.batchYear === regBatchFilter);
+        out.sort((a, b) => {
+            let av: string | number = a[regSortKey] as string | number;
+            let bv: string | number = b[regSortKey] as string | number;
+            if (regSortKey === 'submittedAt') {
+                av = (a.submittedAt?.seconds ?? 0);
+                bv = (b.submittedAt?.seconds ?? 0);
+            }
+            if (av < bv) return regSortDir === 'asc' ? -1 : 1;
+            if (av > bv) return regSortDir === 'asc' ? 1 : -1;
+            return 0;
+        });
+        return out;
+    }, [regs, regSearch, regBatchFilter, regSortKey, regSortDir]);
+
+    const toggleRegSort = (k: 'fullName' | 'batchYear' | 'submittedAt') => {
+        if (regSortKey === k) setRegSortDir(d => d === 'asc' ? 'desc' : 'asc');
+        else { setRegSortKey(k); setRegSortDir('desc'); }
+    };
+
+    const sortIcon = (k: string) => regSortKey === k ? (regSortDir === 'asc' ? ' ↑' : ' ↓') : '';
 
     return (
         <div style={{ fontFamily: "'Inter', system-ui, sans-serif", color: '#1a1f36', background: '#f4f6fb', minHeight: '100vh' }}>
@@ -59,17 +138,19 @@ export default function LandingPage() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <div style={{ width: 42, height: 42, borderRadius: 12, background: 'linear-gradient(135deg,#5b52e8,#E2136E)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, boxShadow: '0 4px 12px rgba(91,82,232,0.3)' }}>🏫</div>
                     <div>
-                        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#9aa3bb' }}>Dharmeswar Mohesha B/L High School</div>
-                        <div style={{ fontSize: 15, fontWeight: 800, color: '#1a1f36', lineHeight: 1.2 }}>Grand Reunion 2026</div>
+                        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#9aa3bb' }}>ধর্মেশ্বর মহেশা বি/এল হাই স্কুল</div>
+                        <div style={{ fontSize: 15, fontWeight: 800, color: '#1a1f36', lineHeight: 1.2 }}>গ্র্যান্ড রিইউনিয়ন ২০২৬</div>
                     </div>
                 </div>
-                <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                    <a href="#about" style={{ fontSize: 14, fontWeight: 500, color: '#5a6282', textDecoration: 'none' }}>About</a>
-                    <a href="#schedule" style={{ fontSize: 14, fontWeight: 500, color: '#5a6282', textDecoration: 'none' }}>Schedule</a>
-                    <a href="#packages" style={{ fontSize: 14, fontWeight: 500, color: '#5a6282', textDecoration: 'none' }}>Packages</a>
-                    <a href="#faq" style={{ fontSize: 14, fontWeight: 500, color: '#5a6282', textDecoration: 'none' }}>FAQ</a>
+                <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+                    <a href="#about" style={{ fontSize: 14, fontWeight: 500, color: '#5a6282', textDecoration: 'none' }}>পরিচিতি</a>
+                    <a href="#schedule" style={{ fontSize: 14, fontWeight: 500, color: '#5a6282', textDecoration: 'none' }}>সূচি</a>
+                    <a href="#packages" style={{ fontSize: 14, fontWeight: 500, color: '#5a6282', textDecoration: 'none' }}>প্যাকেজ</a>
+                    <a href="#registrations" style={{ fontSize: 14, fontWeight: 500, color: '#5a6282', textDecoration: 'none' }}>নিবন্ধন</a>
+                    <a href="#faq" style={{ fontSize: 14, fontWeight: 500, color: '#5a6282', textDecoration: 'none' }}>জিজ্ঞাসা</a>
+                    <Link to="/track" style={{ fontSize: 14, fontWeight: 500, color: '#5b52e8', textDecoration: 'none' }}>🔍 ট্র্যাক</Link>
                     <Link to="/register" style={{ background: 'linear-gradient(135deg,#5b52e8,#7c74f0)', color: 'white', padding: '9px 20px', borderRadius: 10, fontWeight: 700, fontSize: 14, textDecoration: 'none', boxShadow: '0 4px 14px rgba(91,82,232,0.3)' }}>
-                        Register Now →
+                        এখনই রেজিস্ট্রেশন করুন →
                     </Link>
                 </div>
             </nav>
@@ -80,37 +161,37 @@ export default function LandingPage() {
                 <div style={{ position: 'absolute', bottom: '-80px', right: '-60px', width: 350, height: 350, borderRadius: '50%', background: 'rgba(226,19,110,0.05)', pointerEvents: 'none' }} />
                 <div style={{ position: 'relative', zIndex: 1, maxWidth: 700, margin: '0 auto' }}>
                     <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(91,82,232,0.08)', border: '1px solid rgba(91,82,232,0.2)', borderRadius: 999, padding: '5px 16px', fontSize: 12, fontWeight: 600, color: '#5b52e8', marginBottom: 24 }}>
-                        🎓 Alumni Reunion · All Batches Welcome
+                        🎓 প্রাক্তন ছাত্র পুনর্মিলনী · সকল ব্যাচ স্বাগত
                     </div>
                     <h1 style={{ fontSize: 48, fontWeight: 900, lineHeight: 1.1, margin: '0 0 16px' }}>
-                        Welcome Back,{' '}
+                        স্বাগতম,{' '}
                         <span style={{ background: 'linear-gradient(90deg,#E2136E,#5b52e8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                            DMHS Alumni!
+                            DMHS প্রাক্তন ছাত্রবৃন্দ!
                         </span>
                     </h1>
                     <p style={{ fontSize: 18, color: '#5a6282', lineHeight: 1.7, margin: '0 0 32px' }}>
-                        After years apart, it's time to reconnect, reminisce, and celebrate together.<br />
-                        Join us for an unforgettable evening of culture, dinner, and memories.
+                        বহু বছর পর আবার একসাথে হওয়ার সময় এসেছে — পুরনো স্মৃতি, নতুন উদ্যম।<br />
+                        সংস্কৃতি, ডিনার ও স্মৃতিময় এক অবিস্মরণীয় সন্ধ্যায় আপনাকে আমন্ত্রণ।
                     </p>
                     <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 40 }}>
-                        {[{ icon: '📅', label: '28 May 2026', color: '#d97706' }, { icon: '📍', label: 'School Field, DMHS', color: '#E2136E' }, { icon: '🕔', label: '4:00 PM Onwards', color: '#5b52e8' }].map(b => (
+                        {[{ icon: '📅', label: '২৮ মে ২০২৬', color: '#d97706' }, { icon: '📍', label: 'স্কুল মাঠ, DMHS', color: '#E2136E' }, { icon: '🕔', label: 'বিকাল ৪:০০ থেকে', color: '#5b52e8' }].map(b => (
                             <span key={b.label} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'white', border: '1.5px solid #e2e8f4', borderRadius: 999, padding: '7px 16px', fontSize: 13, fontWeight: 600, color: b.color, boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
                                 {b.icon} {b.label}
                             </span>
                         ))}
                     </div>
                     <Link to="/register" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg,#5b52e8,#7c74f0)', color: 'white', padding: '16px 40px', borderRadius: 14, fontWeight: 800, fontSize: 17, textDecoration: 'none', boxShadow: '0 8px 28px rgba(91,82,232,0.35)', transition: 'transform 0.2s' }}>
-                        Register Today · bKash Payment ✓
+                        আজই রেজিস্ট্রেশন করুন · বিকাশ পেমেন্ট ✓
                     </Link>
-                    <div style={{ marginTop: 12, fontSize: 13, color: '#9aa3bb' }}>Quick · Secure · Instant confirmation</div>
+                    <div style={{ marginTop: 12, fontSize: 13, color: '#9aa3bb' }}>দ্রুত · নিরাপদ · তাৎক্ষণিক নিশ্চিতকরণ</div>
                 </div>
             </section>
 
             {/* ── COUNTDOWN ─────────────────────────────── */}
             <section style={{ background: 'linear-gradient(135deg,#5b52e8,#E2136E)', padding: '48px 24px', textAlign: 'center' }}>
-                <div style={{ fontSize: 13, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.7)', marginBottom: 20 }}>Event Starts In</div>
+                <div style={{ fontSize: 13, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.7)', marginBottom: 20 }}>অনুষ্ঠান শুরু হতে বাকি</div>
                 <div style={{ display: 'flex', justifyContent: 'center', gap: 16, flexWrap: 'wrap' }}>
-                    {[{ v: days, l: 'Days' }, { v: hours, l: 'Hours' }, { v: minutes, l: 'Minutes' }, { v: seconds, l: 'Seconds' }].map(({ v, l }) => (
+                    {[{ v: days, l: 'দিন' }, { v: hours, l: 'ঘণ্টা' }, { v: minutes, l: 'মিনিট' }, { v: seconds, l: 'সেকেন্ড' }].map(({ v, l }) => (
                         <div key={l} style={{ background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(8px)', borderRadius: 16, padding: '20px 28px', minWidth: 90, border: '1px solid rgba(255,255,255,0.2)' }}>
                             <div style={{ fontSize: 42, fontWeight: 900, color: 'white', lineHeight: 1 }}>{String(v).padStart(2, '0')}</div>
                             <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', color: 'rgba(255,255,255,0.7)', marginTop: 6, textTransform: 'uppercase' }}>{l}</div>
@@ -122,18 +203,18 @@ export default function LandingPage() {
             {/* ── ABOUT ─────────────────────────────────── */}
             <section id="about" style={{ maxWidth: 800, margin: '0 auto', padding: '72px 24px' }}>
                 <div style={{ textAlign: 'center', marginBottom: 48 }}>
-                    <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5b52e8', marginBottom: 10 }}>About The Event</div>
-                    <h2 style={{ fontSize: 34, fontWeight: 900, margin: 0 }}>A Night to Remember</h2>
+                    <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5b52e8', marginBottom: 10 }}>অনুষ্ঠান সম্পর্কে</div>
+                    <h2 style={{ fontSize: 34, fontWeight: 900, margin: 0 }}>এক স্মরণীয় সন্ধ্যা</h2>
                     <p style={{ fontSize: 16, color: '#5a6282', marginTop: 12, lineHeight: 1.8 }}>
-                        Dharmeswar Mohesha B/L High School Grand Reunion 2026 brings together alumni from all batches for a grand evening of culture, dinner, and reunion. Whether you graduated in the 1990s or 2020s — everyone is welcome.
+                        ধর্মেশ্বর মহেশা বি/এল হাই স্কুল গ্র্যান্ড রিইউনিয়ন ২০২৬ — সকল ব্যাচের প্রাক্তন ছাত্রদের জন্য সংস্কৃতি, ডিনার ও পুনর্মিলনের এক দারুণ সন্ধ্যা। আপনি ১৯৯০ দশকে বা ২০২০ দশকে পাশ করুন — সবাইকে স্বাগত।
                     </p>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 20 }}>
                     {[
-                        { icon: '🎤', title: 'Cultural Program', desc: 'Songs, poetry & performances by your fellow alumni' },
-                        { icon: '🍽️', title: 'Grand Dinner', desc: 'Full buffet dinner for all registered guests' },
-                        { icon: '📸', title: 'Memory Lane', desc: 'Slideshow of school days, yearbook moments & more' },
-                        { icon: '🏆', title: 'Awards Night', desc: 'Recognition for outstanding alumni contributions' },
+                        { icon: '🎤', title: 'সাংস্কৃতিক অনুষ্ঠান', desc: 'প্রাক্তন ছাত্রদের গান, কবিতা ও পরিবেশনা' },
+                        { icon: '🍽️', title: 'গ্র্যান্ড ডিনার', desc: 'সকল নিবন্ধিত অতিথিদের জন্য সম্পূর্ণ বুফে ডিনার' },
+                        { icon: '📸', title: 'স্মৃতির পথ', desc: 'স্কুল জীবনের স্লাইডশো ও ইয়ারবুক মুহূর্ত' },
+                        { icon: '🏆', title: 'পুরস্কার রজনী', desc: 'বিশেষ অবদানকারী প্রাক্তন ছাত্রদের সম্মাননা' },
                     ].map(c => (
                         <div key={c.title} style={{ background: 'white', border: '1.5px solid #e2e8f4', borderRadius: 16, padding: '24px 20px', textAlign: 'center', boxShadow: '0 2px 12px rgba(91,82,232,0.06)' }}>
                             <div style={{ fontSize: 32, marginBottom: 12 }}>{c.icon}</div>
@@ -148,8 +229,8 @@ export default function LandingPage() {
             <section id="schedule" style={{ background: 'white', padding: '72px 24px' }}>
                 <div style={{ maxWidth: 700, margin: '0 auto' }}>
                     <div style={{ textAlign: 'center', marginBottom: 48 }}>
-                        <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#E2136E', marginBottom: 10 }}>28 May 2026</div>
-                        <h2 style={{ fontSize: 34, fontWeight: 900, margin: 0 }}>Event Schedule</h2>
+                        <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#E2136E', marginBottom: 10 }}>২৮ মে ২০২৬</div>
+                        <h2 style={{ fontSize: 34, fontWeight: 900, margin: 0 }}>অনুষ্ঠানসূচি</h2>
                     </div>
                     <div style={{ position: 'relative' }}>
                         <div style={{ position: 'absolute', left: 68, top: 0, bottom: 0, width: 2, background: '#e2e8f4' }} />
@@ -171,14 +252,14 @@ export default function LandingPage() {
             <section id="packages" style={{ padding: '72px 24px' }}>
                 <div style={{ maxWidth: 860, margin: '0 auto' }}>
                     <div style={{ textAlign: 'center', marginBottom: 48 }}>
-                        <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5b52e8', marginBottom: 10 }}>Ticket Packages</div>
-                        <h2 style={{ fontSize: 34, fontWeight: 900, margin: 0 }}>Choose Your Package</h2>
-                        <p style={{ fontSize: 15, color: '#5a6282', marginTop: 10 }}>Pay easily via bKash after completing your registration</p>
+                        <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5b52e8', marginBottom: 10 }}>টিকেট প্যাকেজ</div>
+                        <h2 style={{ fontSize: 34, fontWeight: 900, margin: 0 }}>আপনার প্যাকেজ বেছে নিন</h2>
+                        <p style={{ fontSize: 15, color: '#5a6282', marginTop: 10 }}>রেজিস্ট্রেশন সম্পন্ন করার পর বিকাশে সহজে পেমেন্ট করুন</p>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 20 }}>
                         {PACKAGES_INFO.map(pkg => (
                             <div key={pkg.name} style={{ background: 'white', border: pkg.popular ? `2px solid ${pkg.color}` : '1.5px solid #e2e8f4', borderRadius: 18, padding: '28px 20px', textAlign: 'center', boxShadow: pkg.popular ? `0 4px 20px ${pkg.color}25` : '0 2px 12px rgba(0,0,0,0.06)', position: 'relative' }}>
-                                {pkg.popular && <div style={{ position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)', background: pkg.color, color: 'white', fontSize: 10, fontWeight: 800, padding: '3px 12px', borderRadius: 999 }}>⭐ Most Popular</div>}
+                                {pkg.popular && <div style={{ position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)', background: pkg.color, color: 'white', fontSize: 10, fontWeight: 800, padding: '3px 12px', borderRadius: 999 }}>⭐ সবচেয়ে জনপ্রিয়</div>}
                                 <div style={{ fontSize: 36, marginBottom: 12 }}>{pkg.icon}</div>
                                 <div style={{ fontWeight: 800, fontSize: 16, marginBottom: 6 }}>{pkg.name}</div>
                                 <div style={{ fontSize: 28, fontWeight: 900, color: pkg.color, marginBottom: 8 }}>{pkg.price}</div>
@@ -188,18 +269,115 @@ export default function LandingPage() {
                     </div>
                     <div style={{ textAlign: 'center', marginTop: 40 }}>
                         <Link to="/register" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg,#E2136E,#c9005a)', color: 'white', padding: '14px 36px', borderRadius: 12, fontWeight: 700, fontSize: 16, textDecoration: 'none', boxShadow: '0 6px 20px rgba(226,19,110,0.3)' }}>
-                            Register & Pay via bKash →
+                            রেজিস্ট্রেশন করুন ও বিকাশে পেমেন্ট করুন →
                         </Link>
                     </div>
                 </div>
             </section>
 
+            {/* ── REGISTRATION OVERVIEW ────────────────── */}
+            <section id="registrations" style={{ background: 'white', padding: '72px 24px' }}>
+                <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+                    <div style={{ textAlign: 'center', marginBottom: 40 }}>
+                        <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#15a96a', marginBottom: 10 }}>নিবন্ধন তথ্য</div>
+                        <h2 style={{ fontSize: 34, fontWeight: 900, margin: 0 }}>রেজিস্ট্রেশন সারসংক্ষেপ</h2>
+                        <p style={{ fontSize: 15, color: '#5a6282', marginTop: 10 }}>এখন পর্যন্ত কতজন নিবন্ধন করেছেন দেখুন</p>
+                    </div>
+
+                    {/* Stats Cards */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 16, marginBottom: 32 }}>
+                        {[
+                            { label: 'মোট নিবন্ধন', value: stats.total, color: '#5b52e8', icon: '📋' },
+                            { label: 'নিশ্চিত', value: stats.confirmed, color: '#15a96a', icon: '✅' },
+                            { label: 'যাচাই অপেক্ষায়', value: stats.pending, color: '#d97706', icon: '⏳' },
+                            { label: 'মোট আসন', value: stats.totalSeats, color: '#E2136E', icon: '💺' },
+                        ].map(s => (
+                            <div key={s.label} style={{ background: '#f4f6fb', border: '1.5px solid #e2e8f4', borderRadius: 14, padding: '20px', textAlign: 'center', boxShadow: '0 1px 6px rgba(0,0,0,0.04)' }}>
+                                <div style={{ fontSize: 28, marginBottom: 6 }}>{s.icon}</div>
+                                <div style={{ fontSize: 32, fontWeight: 900, color: s.color }}>{regsLoading ? '…' : s.value}</div>
+                                <div style={{ fontSize: 12, fontWeight: 600, color: '#9aa3bb', marginTop: 4 }}>{s.label}</div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Filters */}
+                    <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 16, alignItems: 'center' }}>
+                        <input
+                            placeholder="🔍 নাম বা ব্যাচ দিয়ে খুঁজুন…"
+                            value={regSearch}
+                            onChange={e => setRegSearch(e.target.value)}
+                            style={{ flex: '1 1 200px', padding: '9px 14px', border: '1.5px solid #e2e8f4', borderRadius: 8, fontSize: 14, outline: 'none', fontFamily: 'inherit', background: '#f4f6fb' }}
+                        />
+                        <select value={regBatchFilter} onChange={e => setRegBatchFilter(e.target.value)} style={{ padding: '9px 14px', border: '1.5px solid #e2e8f4', borderRadius: 8, fontSize: 13, fontFamily: 'inherit', background: '#f4f6fb', cursor: 'pointer' }}>
+                            <option value="all">সকল ব্যাচ</option>
+                            {batches.map(b => <option key={b} value={b}>{b}</option>)}
+                        </select>
+                        {(regSearch || regBatchFilter !== 'all') && (
+                            <button onClick={() => { setRegSearch(''); setRegBatchFilter('all'); }} style={{ padding: '9px 14px', background: '#fff0f4', color: '#E2136E', border: '1.5px solid #ffcce0', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>✕ রিসেট</button>
+                        )}
+                    </div>
+
+                    {/* Table */}
+                    {regsLoading ? (
+                        <div style={{ textAlign: 'center', padding: 40, color: '#5a6282' }}>⏳ তথ্য লোড হচ্ছে…</div>
+                    ) : regs.length === 0 ? (
+                        <div style={{ textAlign: 'center', padding: 40, color: '#9aa3bb' }}>এখনও কোনো নিবন্ধন হয়নি</div>
+                    ) : (
+                        <div style={{ background: '#f4f6fb', border: '1.5px solid #e2e8f4', borderRadius: 16, overflow: 'hidden', boxShadow: '0 2px 12px rgba(91,82,232,0.05)' }}>
+                            <div style={{ overflowX: 'auto' }}>
+                                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+                                    <thead>
+                                        <tr style={{ background: 'white', borderBottom: '1.5px solid #e2e8f4' }}>
+                                            <th style={{ padding: '12px 14px', textAlign: 'left', fontWeight: 700, color: '#5a6282', fontSize: 11, letterSpacing: '0.06em', textTransform: 'uppercase' }}>#</th>
+                                            <th onClick={() => toggleRegSort('fullName')} style={{ padding: '12px 14px', textAlign: 'left', fontWeight: 700, color: '#5a6282', fontSize: 11, letterSpacing: '0.06em', textTransform: 'uppercase', cursor: 'pointer', userSelect: 'none' }}>
+                                                নাম{sortIcon('fullName')}
+                                            </th>
+                                            <th onClick={() => toggleRegSort('batchYear')} style={{ padding: '12px 14px', textAlign: 'left', fontWeight: 700, color: '#5a6282', fontSize: 11, letterSpacing: '0.06em', textTransform: 'uppercase', cursor: 'pointer', userSelect: 'none' }}>
+                                                ব্যাচ{sortIcon('batchYear')}
+                                            </th>
+                                            <th style={{ padding: '12px 14px', textAlign: 'left', fontWeight: 700, color: '#5a6282', fontSize: 11, letterSpacing: '0.06em', textTransform: 'uppercase' }}>এলাকা</th>
+                                            <th style={{ padding: '12px 14px', textAlign: 'left', fontWeight: 700, color: '#5a6282', fontSize: 11, letterSpacing: '0.06em', textTransform: 'uppercase' }}>প্যাকেজ</th>
+                                            <th style={{ padding: '12px 14px', textAlign: 'center', fontWeight: 700, color: '#5a6282', fontSize: 11, letterSpacing: '0.06em', textTransform: 'uppercase' }}>আসন</th>
+                                            <th style={{ padding: '12px 14px', textAlign: 'left', fontWeight: 700, color: '#5a6282', fontSize: 11, letterSpacing: '0.06em', textTransform: 'uppercase' }}>অবস্থা</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {filteredRegs.length === 0 && (
+                                            <tr><td colSpan={7} style={{ textAlign: 'center', padding: 40, color: '#9aa3bb' }}>কোনো ফলাফল পাওয়া যায়নি</td></tr>
+                                        )}
+                                        {filteredRegs.map((r, i) => (
+                                            <tr key={i} style={{ borderBottom: '1px solid #e8eaf2', background: i % 2 === 0 ? 'white' : '#fafbff' }}>
+                                                <td style={{ padding: '12px 14px', color: '#9aa3bb', fontSize: 12 }}>{i + 1}</td>
+                                                <td style={{ padding: '12px 14px', fontWeight: 600, whiteSpace: 'nowrap' }}>{r.fullName}</td>
+                                                <td style={{ padding: '12px 14px', color: '#5a6282' }}>{r.batchYear}</td>
+                                                <td style={{ padding: '12px 14px', color: '#5a6282' }}>{r.currentCity}</td>
+                                                <td style={{ padding: '12px 14px', whiteSpace: 'nowrap' }}>{r.packageName}</td>
+                                                <td style={{ padding: '12px 14px', textAlign: 'center' }}>{r.seats}</td>
+                                                <td style={{ padding: '12px 14px' }}>
+                                                    {r.status === 'confirmed'
+                                                        ? <span style={{ background: '#f0fff8', color: '#15a96a', border: '1px solid #15a96a30', borderRadius: 999, padding: '2px 10px', fontSize: 11, fontWeight: 700 }}>✓ নিশ্চিত</span>
+                                                        : <span style={{ background: '#fffbeb', color: '#d97706', border: '1px solid #d9770630', borderRadius: 999, padding: '2px 10px', fontSize: 11, fontWeight: 700 }}>⏳ যাচাই অপেক্ষায়</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div style={{ padding: '12px 20px', borderTop: '1px solid #e2e8f4', fontSize: 12, color: '#9aa3bb', background: 'white' }}>
+                                মোট {regs.length} জনের মধ্যে {filteredRegs.length} জন দেখানো হচ্ছে
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </section>
+
             {/* ── FAQ ───────────────────────────────────── */}
-            <section id="faq" style={{ background: 'white', padding: '72px 24px' }}>
+            <section id="faq" style={{ padding: '72px 24px' }}>
                 <div style={{ maxWidth: 680, margin: '0 auto' }}>
                     <div style={{ textAlign: 'center', marginBottom: 48 }}>
-                        <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5b52e8', marginBottom: 10 }}>FAQ</div>
-                        <h2 style={{ fontSize: 34, fontWeight: 900, margin: 0 }}>Frequently Asked Questions</h2>
+                        <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5b52e8', marginBottom: 10 }}>জিজ্ঞাসা</div>
+                        <h2 style={{ fontSize: 34, fontWeight: 900, margin: 0 }}>সচরাচর জিজ্ঞাসা</h2>
                     </div>
                     {FAQ.map((item, i) => (
                         <div key={i} style={{ border: '1.5px solid #e2e8f4', borderRadius: 14, marginBottom: 12, overflow: 'hidden' }}>
@@ -218,12 +396,14 @@ export default function LandingPage() {
             {/* ── FOOTER ────────────────────────────────── */}
             <footer style={{ background: '#1a1f36', color: 'rgba(255,255,255,0.7)', textAlign: 'center', padding: '40px 24px' }}>
                 <div style={{ fontSize: 22, marginBottom: 8 }}>🏫</div>
-                <div style={{ fontWeight: 700, color: 'white', fontSize: 15, marginBottom: 4 }}>Dharmeswar Mohesha B/L High School Alumni Association</div>
-                <div style={{ fontSize: 13, marginBottom: 16 }}>Grand Reunion 2026 · 28 May · School Field</div>
-                <div style={{ fontSize: 13 }}>
-                    📞 <a href="tel:01700000000" style={{ color: '#a5a0ff', textDecoration: 'none' }}>01700-000000</a>
-                    {' '} · {' '}
-                    ✉️ <a href="mailto:reunion@dmhs.edu.bd" style={{ color: '#a5a0ff', textDecoration: 'none' }}>reunion@dmhs.edu.bd</a>
+                <div style={{ fontWeight: 700, color: 'white', fontSize: 15, marginBottom: 4 }}>ধর্মেশ্বর মহেশা বি/এল হাই স্কুল প্রাক্তন ছাত্র সমিতি</div>
+                <div style={{ fontSize: 13, marginBottom: 16 }}>গ্র্যান্ড রিইউনিয়ন ২০২৬ · ২৮ মে · স্কুল মাঠ</div>
+                <div style={{ fontSize: 13, display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
+                    <Link to="/track" style={{ color: '#a5a0ff', textDecoration: 'none' }}>🔍 রেজিস্ট্রেশন ট্র্যাক</Link>
+                    <span>·</span>
+                    <span>📞 <a href="tel:01700000000" style={{ color: '#a5a0ff', textDecoration: 'none' }}>০১৭০০-০০০০০০</a></span>
+                    <span>·</span>
+                    <span>✉️ <a href="mailto:reunion@dmhs.edu.bd" style={{ color: '#a5a0ff', textDecoration: 'none' }}>reunion@dmhs.edu.bd</a></span>
                 </div>
                 <div style={{ marginTop: 20, fontSize: 11, color: 'rgba(255,255,255,0.3)', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 16 }}>
                     <Link to="/admin" style={{ color: 'rgba(255,255,255,0.25)', textDecoration: 'none', fontSize: 11 }}>Admin</Link>

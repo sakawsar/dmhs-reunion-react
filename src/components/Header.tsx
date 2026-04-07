@@ -5,9 +5,9 @@ const Header: React.FC = () => {
         <header className="site-header">
             <div className="header-logo">🏫</div>
             <div className="header-text">
-                <div className="header-school">Dharmeswar Mohesha B/L High School</div>
-                <div className="header-event">Grand Reunion 2026</div>
-                <div className="header-date">📅 28 May 2026 · School field</div>
+                <div className="header-school">ধর্মেশ্বর মহেশা বি/এল হাই স্কুল</div>
+                <div className="header-event">গ্র্যান্ড রিইউনিয়ন ২০২৬</div>
+                <div className="header-date">📅 ২৮ মে ২০২৬ · স্কুল মাঠ</div>
             </div>
         </header>
     );

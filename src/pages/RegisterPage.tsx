@@ -7,7 +7,7 @@ export default function RegisterPage() {
             {/* Back to landing nav */}
             <div style={{ background: 'white', borderBottom: '1px solid #e2e8f4', padding: '12px 24px', boxShadow: '0 1px 6px rgba(0,0,0,0.05)' }}>
                 <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 14, fontWeight: 600, color: '#5b52e8', textDecoration: 'none' }}>
-                    ← Back to Event Page
+                    ← ইভেন্ট পেজে ফিরে যান
                 </Link>
             </div>
             <ReunionForm />

@@ -7,6 +7,7 @@ export interface FormData {
     email: string;
     currentCity: string;
     profession: string;
+    bloodGroup: string;
     // Step 2
     packageId: string;
     seats: number;
