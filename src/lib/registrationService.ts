@@ -1,5 +1,6 @@
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from './firebase';
+import { syncToGoogleSheets } from './googleSheetsService';
 import type { FormData, Package } from '../components/types';
 
 export interface RegistrationPayload {
@@ -49,6 +50,9 @@ export async function saveRegistration(
         submittedAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
     });
+
+    // Fire-and-forget: sync to Google Sheets for finance tracking
+    syncToGoogleSheets({ formData, ticketId, packageName, totalAmount }).catch(() => {});
 
     return docRef.id;
 }
