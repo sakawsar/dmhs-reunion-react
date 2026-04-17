@@ -30,7 +30,7 @@ const BkashPayment: React.FC<BkashPaymentProps> = ({ data, errors, onChange, pac
             <div className="flex row gap-[32px]">
                 <label className="">
                     <p>Bkash</p>
-                    <input type="radio" checked={true} onChange={(e) => setPM(e.target.value)} name="payment_method" value="bkash" />
+                    <input type="radio" checked={paymentMethod == 'bkash'} onChange={(e) => setPM(e.target.value)} name="payment_method" value="bkash" />
                 </label>
                 <label>
                     <p>Nagad</p>
