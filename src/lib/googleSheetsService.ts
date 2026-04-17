@@ -41,16 +41,16 @@ export async function syncToGoogleSheets(payload: SheetsPayload): Promise<void> 
     };
 
     try {
-        const res = await fetch(SHEETS_URL, {
+        // Google Apps Script Web Apps redirect POSTs through Google's servers.
+        // mode: 'no-cors' lets the browser follow these redirects silently.
+        // We can't read the response in no-cors mode, but that's fine for
+        // fire-and-forget — the row still gets appended.
+        await fetch(SHEETS_URL, {
             method: 'POST',
             body: JSON.stringify(body),
-            headers: { 'Content-Type': 'text/plain' },
-            // text/plain avoids CORS preflight with Apps Script
+            redirect: 'follow',
+            mode: 'no-cors',
         });
-
-        if (!res.ok) {
-            console.warn(`[Google Sheets] HTTP ${res.status}: ${res.statusText}`);
-        }
     } catch (err) {
         console.warn('[Google Sheets] Sync failed (non-blocking):', err);
     }

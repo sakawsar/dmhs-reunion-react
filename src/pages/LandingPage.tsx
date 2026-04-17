@@ -131,7 +131,7 @@ export default function LandingPage() {
     const sortIcon = (k: string) => regSortKey === k ? (regSortDir === 'asc' ? ' ↑' : ' ↓') : '';
 
     return (
-        <div style={{ fontFamily: "'Inter', system-ui, sans-serif", color: '#1a1f36', background: '#f4f6fb', minHeight: '100vh' }}>
+        <div style={{ color: '#1a1f36', background: '#f4f6fb', minHeight: '100vh' }}>
 
             {/* ── NAV ────────────────────────────────────── */}
             <nav style={{ background: 'white', borderBottom: '1px solid #e2e8f4', padding: '14px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100, boxShadow: '0 1px 8px rgba(0,0,0,0.06)' }}>
@@ -163,15 +163,17 @@ export default function LandingPage() {
                     <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(91,82,232,0.08)', border: '1px solid rgba(91,82,232,0.2)', borderRadius: 999, padding: '5px 16px', fontSize: 12, fontWeight: 600, color: '#5b52e8', marginBottom: 24 }}>
                         🎓 প্রাক্তন ছাত্র পুনর্মিলনী · সকল ব্যাচ স্বাগত
                     </div>
-                    <h1 style={{ fontSize: 48, fontWeight: 900, lineHeight: 1.1, margin: '0 0 16px' }}>
-                        স্বাগতম,{' '}
-                        <span style={{ background: 'linear-gradient(90deg,#E2136E,#5b52e8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                            DMHS প্রাক্তন ছাত্রবৃন্দ!
+                    <h1 style={{ fontSize: 42, fontWeight: 900, lineHeight: 1.1, margin: '0 0 16px' }}>
+                        {/* স্বাগতম,{' '} */}
+                        <span style={{ background: 'linear-gradient(90deg,#ff0000,#00ff00)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                            ধর্ম্মেশ্বর মহেশা দ্বি-মূখী উচ্চ বিদ্যালয়
                         </span>
                     </h1>
-                    <p style={{ fontSize: 18, color: '#5a6282', lineHeight: 1.7, margin: '0 0 32px' }}>
-                        বহু বছর পর আবার একসাথে হওয়ার সময় এসেছে — পুরনো স্মৃতি, নতুন উদ্যম।<br />
-                        সংস্কৃতি, ডিনার ও স্মৃতিময় এক অবিস্মরণীয় সন্ধ্যায় আপনাকে আমন্ত্রণ।
+                    <p style={{ fontSize: 24, color: '#5a6282', margin: '0 0 32px' }}>
+                        আমাদের প্রাণের ঠিকানা
+                    </p>
+                    <p style={{ fontSize: 18, color: '#5a6282', margin: '0 0 32px' }}>
+                        যেখানে তোমার আমার শৈশব কৈশর ও যৌবনের শ্রেষ্ঠ সময়ের স্মৃতি এখনো খেলা করে।
                     </p>
                     <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 40 }}>
                         {[{ icon: '📅', label: '৩০ মে, ২০২৬', color: '#d97706' }, { icon: '📍', label: 'স্কুল মাঠ, DMHS', color: '#E2136E' }, { icon: '🕔', label: 'বিকাল ৪:০০ থেকে', color: '#5b52e8' }].map(b => (

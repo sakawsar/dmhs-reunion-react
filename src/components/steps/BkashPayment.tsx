@@ -22,12 +22,30 @@ const BkashPayment: React.FC<BkashPaymentProps> = ({ data, errors, onChange, pac
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
-
+    const [paymentMethod, setPM] = useState('bkash')
     return (
         <div className={animClass}>
             <div className="form-title">বিকাশ পেমেন্ট</div>
             <div className="form-subtitle">বিকাশে পেমেন্ট সম্পন্ন করুন এবং নীচে ট্রানজেকশন তথ্য দিন।</div>
-
+            <div className="flex row gap-[32px]">
+                <label className="">
+                    <p>Bkash</p>
+                    <input type="radio" checked={true} onChange={(e) => setPM(e.target.value)} name="payment_method" value="bkash" />
+                </label>
+                <label>
+                    <p>Nagad</p>
+                    <input type="radio" name="payment_method" value="Nagad" />
+                </label>
+                <label>
+                    <p>Rocket</p>
+                    <input type="radio" name="payment_method" value="Rocket" />
+                </label>
+                <label>
+                    <p>Bank account</p>
+                    <input type="radio" name="payment_method" value="bank" />
+                </label>
+                {/* <input type="radio"></input> */}
+            </div>
             {/* bKash Instructions Card */}
             <div className="bkash-card">
                 <div className="bkash-header">
@@ -73,7 +91,7 @@ const BkashPayment: React.FC<BkashPaymentProps> = ({ data, errors, onChange, pac
                     <li className="bkash-step-item">
                         <span className="bkash-step-num">৪</span>
                         <span className="bkash-step-text">
-                            <strong>রেফারেন্স/নোট</strong> হিসেবে লিখুন: <strong className="text-accent">"DMHS26-{data.batchYear || 'BATCH'}"</strong>
+                            <strong>রেফারেন্স/নোট</strong> হিসেবে লিখুন: <strong className="text-accent">"{data.batchYear || 'BATCH'}"</strong>
                         </span>
                     </li>
                     <li className="bkash-step-item">

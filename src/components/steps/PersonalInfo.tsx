@@ -55,7 +55,7 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ data, errors, onChange, ani
                     >
                         <option value="">শাখা নির্বাচন করুন</option>
                         <option value="Science">বিজ্ঞান</option>
-                        <option value="Commerce">বাণিজ্য</option>
+                        {/* <option value="Commerce">বাণিজ্য</option> */}
                         <option value="Arts">মানবিক</option>
                     </select>
                 </div>
