@@ -133,9 +133,10 @@ export default function LandingPage() {
     return (
         <div style={{ color: '#1a1f36', background: '#f4f6fb', minHeight: '100vh' }}>
 
-            {/* ── NAV ────────────────────────────────────── */}
-            <nav style={{ background: 'white', borderBottom: '1px solid #e2e8f4', padding: '14px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100, boxShadow: '0 1px 8px rgba(0,0,0,0.06)' }}>
-                <p>বিসমিল্লাহির রহমানির রহিম</p>
+            {/* ── BISMILLAH + NAV (sticky together) ────── */}
+            <div style={{ position: 'sticky', top: 0, zIndex: 100 }}>
+                <div className="bismillah-bar">বিসমিল্লাহির রহমানির রহিম</div>
+                <nav style={{ background: 'white', borderBottom: '1px solid #e2e8f4', padding: '14px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 1px 8px rgba(0,0,0,0.06)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <div style={{ width: 42, height: 42, borderRadius: 12, background: 'linear-gradient(135deg,#5b52e8,#E2136E)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, boxShadow: '0 4px 12px rgba(91,82,232,0.3)' }}>🏫</div>
                     <div>
@@ -155,6 +156,7 @@ export default function LandingPage() {
                     </Link>
                 </div>
             </nav>
+            </div>
 
             {/* ── HERO ───────────────────────────────────── */}
             <section style={{ background: 'linear-gradient(135deg,#f0f2ff 0%,#fff5fa 50%,#f0fff8 100%)', padding: '80px 24px 60px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
