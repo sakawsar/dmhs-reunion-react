@@ -15,14 +15,14 @@ service cloud.firestore {
         request.resource.data.phone.size() >= 11 &&
         request.resource.data.batchYear is string &&
         request.resource.data.batchYear.size() == 4 &&
-        request.resource.data.bkashTxId is string &&
-        request.resource.data.bkashTxId.size() >= 6 &&
-        request.resource.data.bkashPhone is string &&
-        request.resource.data.bkashPhone.size() >= 11 &&
+        request.resource.data.paymentMethod is string &&
+        request.resource.data.paymentTxId is string &&
+        request.resource.data.paymentTxId.size() >= 6 &&
+        request.resource.data.paymentSenderPhone is string &&
+        request.resource.data.paymentSenderPhone.size() >= 11 &&
         request.resource.data.status == 'pending_verification' &&
-        request.resource.data.seats is int &&
-        request.resource.data.seats >= 1 &&
-        request.resource.data.seats <= 10 &&
+        request.resource.data.guests is int &&
+        request.resource.data.guests >= 0 &&
         request.resource.data.totalAmount is number &&
         request.resource.data.totalAmount > 0;
 
@@ -31,10 +31,10 @@ service cloud.firestore {
       // TODO: Replace with Firebase Auth for production.
       allow read: if true;
 
-      // Only allow updating the `status` field (mark as confirmed)
+      // Only allow updating the `status` field (mark as confirmed/rejected)
       allow update: if
         request.resource.data.status is string &&
-        (request.resource.data.status == 'confirmed' || request.resource.data.status == 'pending_verification') &&
+        (request.resource.data.status == 'confirmed' || request.resource.data.status == 'pending_verification' || request.resource.data.status == 'rejected') &&
         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']);
 
       allow delete: if false;

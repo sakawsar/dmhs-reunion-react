@@ -19,13 +19,12 @@ interface Registration {
     paymentMethod: string;
     paymentTxId: string;
     paymentSenderPhone: string;
-    dietaryPref: string;
     tshirtSize: string;
     status: string;
     submittedAt: { seconds: number } | null;
 }
 
-const ADMIN_PIN = 'dmhs2026'; // change this to whatever you want
+const ADMIN_PIN = import.meta.env.VITE_ADMIN_PASSWORD || 'dmhs2026';
 
 function formatDate(ts: { seconds: number } | null) {
     if (!ts) return '—';
@@ -37,7 +36,7 @@ function exportCSV(rows: Registration[]) {
     const lines = rows.map(r => [
         r.ticketId, r.fullName, r.fatherName || '', r.batchYear, r.phone, r.email ?? '', r.currentCity,
         r.guests, r.totalAmount, r.paymentMethod || 'bkash', r.paymentTxId, r.paymentSenderPhone, r.tshirtSize || '',
-        r.dietaryPref, r.status, formatDate(r.submittedAt),
+        r.status, formatDate(r.submittedAt),
     ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
     const csv = [headers.join(','), ...lines].join('\n');
     const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });

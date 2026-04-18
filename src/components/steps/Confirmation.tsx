@@ -26,7 +26,6 @@ const Confirmation: React.FC<ConfirmationProps> = ({ data, ticketId, firestoreDo
         { key: 'ঠিকানা', val: data.currentCity },
         { key: 'টি-শার্ট সাইজ', val: data.tshirtSize || '—' },
         { key: 'অতিথি সংখ্যা', val: `${guests} জন` },
-        { key: 'খাবারের পছন্দ', val: data.dietaryPref || 'কোনো পছন্দ নেই' },
         { key: 'পেমেন্ট মাধ্যম', val: PAYMENT_LABELS[data.paymentMethod] || data.paymentMethod },
         { key: 'ট্রানজেকশন TxID', val: data.paymentTxId },
         { key: 'মোট পরিশোধ', val: `৳${totalAmount.toLocaleString()}`, highlight: true },

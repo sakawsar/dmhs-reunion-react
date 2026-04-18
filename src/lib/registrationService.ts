@@ -40,9 +40,6 @@ export async function saveRegistration(
 
         // Attendance
         guests: formData.guests,
-        guestNames: formData.guestNames || null,
-        dietaryPref: formData.dietaryPref,
-        specialRequests: formData.specialRequests || null,
 
         // Payment
         paymentMethod: formData.paymentMethod,

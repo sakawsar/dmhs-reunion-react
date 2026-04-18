@@ -10,11 +10,7 @@ export interface FormData {
     profession: string;
     bloodGroup: string;
     tshirtSize: string;
-    // Step 2
     guests: number;
-    guestNames: string;
-    dietaryPref: string;
-    specialRequests: string;
     // Step 3
     paymentMethod: string;
     paymentTxId: string;

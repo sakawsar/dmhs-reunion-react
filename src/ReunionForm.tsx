@@ -19,7 +19,6 @@ const STEPS = [
 const INITIAL_FORM: FormData = {
     fullName: '', fatherName: '', batchYear: '', section: '', phone: '', email: '',
     currentCity: '', profession: '', bloodGroup: '', tshirtSize: '', guests: 0,
-    guestNames: '', dietaryPref: 'no-preference', specialRequests: '',
     paymentMethod: 'bkash', paymentTxId: '', paymentSenderPhone: '',
 };
 

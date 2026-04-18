@@ -10,7 +10,7 @@ interface AttendanceDetailsProps {
 }
 
 const AttendanceDetails: React.FC<AttendanceDetailsProps> = ({
-    data, errors, onChange, animClass
+    data, onChange, animClass
 }) => {
     const guests = Number(data.guests) || 0;
     const { baseAmount, guestCharge, totalAmount } = calculateTotal(data.batchYear, guests);
@@ -66,41 +66,6 @@ const AttendanceDetails: React.FC<AttendanceDetailsProps> = ({
                     প্রতি অতিথির জন্য অতিরিক্ত ৳৫০০ চার্জ যোগ হবে।
                 </div>
             </div>
-
-            {/* <div className="form-group">
-                <label htmlFor="guestNames">অতিথি / সঙ্গীর নাম</label>
-                <textarea
-                    id="guestNames"
-                    placeholder="আপনার সাথে যারা আসবেন তাদের নাম লিখুন (ঐচ্ছিক)"
-                    value={data.guestNames}
-                    onChange={e => onChange('guestNames', e.target.value)}
-                />
-            </div>
-
-            <div className="form-group">
-                <label htmlFor="dietaryPref">খাবারের পছন্দ</label>
-                <select
-                    id="dietaryPref"
-                    value={data.dietaryPref}
-                    onChange={e => onChange('dietaryPref', e.target.value)}
-                >
-                    <option value="no-preference">কোনো পছন্দ নেই</option>
-                    <option value="vegetarian">নিরামিষ</option>
-                    <option value="non-vegetarian">আমিষ</option>
-                    <option value="vegan">ভেগান</option>
-                    <option value="halal-only">শুধুমাত্র হালাল</option>
-                </select>
-            </div>
-
-            <div className="form-group">
-                <label htmlFor="specialRequests">বিশেষ অনুরোধ বা মন্তব্য</label>
-                <textarea
-                    id="specialRequests"
-                    placeholder="কোনো বিশেষ প্রয়োজন, অ্যালার্জি, বা আয়োজকদের জন্য বার্তা…"
-                    value={data.specialRequests}
-                    onChange={e => onChange('specialRequests', e.target.value)}
-                />
-            </div> */}
         </div>
     );
 };
