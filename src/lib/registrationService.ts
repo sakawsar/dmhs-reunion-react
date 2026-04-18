@@ -1,7 +1,7 @@
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from './firebase';
 import { syncToGoogleSheets } from './googleSheetsService';
-import type { FormData, Package } from '../components/types';
+import type { FormData } from '../components/types';
 
 export interface RegistrationPayload {
     formData: FormData;
@@ -24,10 +24,11 @@ export async function saveRegistration(
         ticketId,
         packageName,
         totalAmount,
-        status: 'pending_verification', // set to 'confirmed' after bKash is verified
+        status: 'pending_verification',
 
         // Personal info
         fullName: formData.fullName,
+        fatherName: formData.fatherName,
         batchYear: formData.batchYear,
         section: formData.section || null,
         phone: formData.phone,
@@ -35,9 +36,10 @@ export async function saveRegistration(
         currentCity: formData.currentCity,
         profession: formData.profession || null,
         bloodGroup: formData.bloodGroup || null,
+        tshirtSize: formData.tshirtSize || null,
 
         // Attendance
-        seats: formData.seats,
+        guests: formData.guests,
         guestNames: formData.guestNames || null,
         dietaryPref: formData.dietaryPref,
         specialRequests: formData.specialRequests || null,
@@ -55,19 +57,4 @@ export async function saveRegistration(
     syncToGoogleSheets({ formData, ticketId, packageName, totalAmount }).catch(() => {});
 
     return docRef.id;
-}
-
-/**
- * Helper: resolve package details for a given packageId.
- */
-export function resolvePackage(
-    packageId: string,
-    packages: Package[],
-    seats: number,
-): { packageName: string; totalAmount: number } {
-    const pkg = packages.find(p => p.id === packageId);
-    return {
-        packageName: pkg ? `${pkg.name} (${pkg.icon})` : packageId,
-        totalAmount: (pkg?.price ?? 0) * seats,
-    };
 }

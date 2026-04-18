@@ -5,14 +5,9 @@ import PersonalInfo from './components/steps/PersonalInfo';
 import AttendanceDetails from './components/steps/AttendanceDetails';
 import BkashPayment from './components/steps/BkashPayment';
 import Confirmation from './components/steps/Confirmation';
-import type { FormData, FormErrors, Package } from './components/types';
-import { saveRegistration, resolvePackage } from './lib/registrationService';
-
-const PACKAGES: Package[] = [
-    { id: 'single', name: 'একক', price: 1000, description: '১ জন · ডিনার ও অনুষ্ঠান', icon: '🧑' },
-    { id: 'couple', name: 'দম্পতি', price: 1500, description: '২ জন · ডিনার ও অনুষ্ঠান', icon: '👫', popular: true },
-    { id: 'family', name: 'পরিবার', price: 2200, description: '৪ জন পর্যন্ত · সম্পূর্ণ প্যাকেজ', icon: '👨‍👩‍👧‍👦' },
-];
+import type { FormData, FormErrors } from './components/types';
+import { calculateTotal } from './components/types';
+import { saveRegistration } from './lib/registrationService';
 
 const STEPS = [
     { label: 'ব্যক্তিগত', icon: '1' },
@@ -22,8 +17,8 @@ const STEPS = [
 ];
 
 const INITIAL_FORM: FormData = {
-    fullName: '', batchYear: '', section: '', phone: '', email: '',
-    currentCity: '', profession: '', bloodGroup: '', packageId: 'couple', seats: 1,
+    fullName: '', fatherName: '', batchYear: '', section: '', phone: '', email: '',
+    currentCity: '', profession: '', bloodGroup: '', tshirtSize: '', guests: 0,
     guestNames: '', dietaryPref: 'no-preference', specialRequests: '',
     bkashTxId: '', bkashPhone: '',
 };
@@ -54,6 +49,7 @@ export default function ReunionForm() {
         const newErrors: FormErrors = {};
         if (currentStep === 0) {
             if (!formData.fullName.trim()) newErrors.fullName = 'পূর্ণ নাম আবশ্যক';
+            if (!formData.fatherName.trim()) newErrors.fatherName = 'পিতার নাম আবশ্যক';
             if (!formData.batchYear) newErrors.batchYear = 'অনুগ্রহ করে ব্যাচ সাল নির্বাচন করুন';
             if (!formData.phone.trim()) newErrors.phone = 'ফোন নম্বর আবশ্যক';
             else if (!/^01[3-9]\d{8}$/.test(formData.phone.replace(/\s|-/g, '')))
@@ -61,9 +57,10 @@ export default function ReunionForm() {
             if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
                 newErrors.email = 'একটি সঠিক ইমেইল ঠিকানা দিন';
             if (!formData.currentCity.trim()) newErrors.currentCity = 'বর্তমান ঠিকানা আবশ্যক';
+            if (!formData.tshirtSize) newErrors.tshirtSize = 'অনুগ্রহ করে টি-শার্ট সাইজ নির্বাচন করুন';
         }
         if (currentStep === 1) {
-            if (!formData.packageId) newErrors.packageId = 'অনুগ্রহ করে একটি প্যাকেজ নির্বাচন করুন';
+            // no package validation needed anymore
         }
         if (currentStep === 2) {
             if (!formData.bkashTxId.trim()) newErrors.bkashTxId = 'ট্রানজেকশন আইডি আবশ্যক';
@@ -87,8 +84,8 @@ export default function ReunionForm() {
         setIsSubmitting(true);
         setSubmitError(null);
         try {
-            const { packageName, totalAmount } = resolvePackage(formData.packageId, PACKAGES, Number(formData.seats));
-            const docId = await saveRegistration({ formData, ticketId, packageName, totalAmount });
+            const { totalAmount } = calculateTotal(formData.batchYear, Number(formData.guests) || 0);
+            const docId = await saveRegistration({ formData, ticketId, packageName: `ব্যাচ ${formData.batchYear}`, totalAmount });
             setFirestoreDocId(docId);
             setDirection('forward');
             setStep(s => Math.min(s + 1, STEPS.length - 1));
@@ -106,9 +103,9 @@ export default function ReunionForm() {
     const renderStep = () => {
         switch (step) {
             case 0: return <PersonalInfo data={formData} errors={errors} onChange={handleChange} animClass={animClass} />;
-            case 1: return <AttendanceDetails data={formData} errors={errors} onChange={handleChange} packages={PACKAGES} animClass={animClass} />;
-            case 2: return <BkashPayment data={formData} errors={errors} onChange={handleChange} packages={PACKAGES} animClass={animClass} />;
-            case 3: return <Confirmation data={formData} packages={PACKAGES} ticketId={ticketId} firestoreDocId={firestoreDocId} animClass={animClass} />;
+            case 1: return <AttendanceDetails data={formData} errors={errors} onChange={handleChange} animClass={animClass} />;
+            case 2: return <BkashPayment data={formData} errors={errors} onChange={handleChange} animClass={animClass} />;
+            case 3: return <Confirmation data={formData} ticketId={ticketId} firestoreDocId={firestoreDocId} animClass={animClass} />;
             default: return null;
         }
     };

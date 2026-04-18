@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
-import type { FormData, FormErrors, Package } from '../types';
+import type { FormData, FormErrors } from '../types';
+import { calculateTotal } from '../types';
 
 interface BkashPaymentProps {
     data: FormData;
     errors: FormErrors;
     onChange: (field: keyof FormData, value: string | number) => void;
-    packages: Package[];
     animClass: string;
 }
 
 const BKASH_MERCHANT_NUMBER = '01700-000000';
 
-const BkashPayment: React.FC<BkashPaymentProps> = ({ data, errors, onChange, packages, animClass }) => {
+const BkashPayment: React.FC<BkashPaymentProps> = ({ data, errors, onChange, animClass }) => {
     const [copied, setCopied] = useState(false);
 
-    const selectedPackage = packages.find(p => p.id === data.packageId);
-    const totalAmount = (selectedPackage?.price ?? 0) * (Number(data.seats) || 1);
+    const guests = Number(data.guests) || 0;
+    const { baseAmount, guestCharge, totalAmount } = calculateTotal(data.batchYear, guests);
 
     const handleCopy = () => {
         navigator.clipboard.writeText(BKASH_MERCHANT_NUMBER.replace('-', ''));
@@ -44,7 +44,6 @@ const BkashPayment: React.FC<BkashPaymentProps> = ({ data, errors, onChange, pac
                     <p>Bank account</p>
                     <input type="radio" name="payment_method" value="bank" />
                 </label>
-                {/* <input type="radio"></input> */}
             </div>
             {/* bKash Instructions Card */}
             <div className="bkash-card">
@@ -107,7 +106,8 @@ const BkashPayment: React.FC<BkashPaymentProps> = ({ data, errors, onChange, pac
                     <div>
                         <div className="bkash-amount-label">মোট পরিশোধযোগ্য টাকা</div>
                         <div style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginTop: '2px' }}>
-                            {selectedPackage?.name} × {data.seats} আসন
+                            ব্যাচ {data.batchYear}: ৳{baseAmount.toLocaleString()}
+                            {guests > 0 && ` + অতিথি ${guests} জন: ৳${guestCharge.toLocaleString()}`}
                         </div>
                     </div>
                     <div className="bkash-amount-value">৳{totalAmount.toLocaleString()}</div>

@@ -29,6 +29,19 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ data, errors, onChange, ani
                 {errors.fullName && <div className="error-msg">⚠ {errors.fullName}</div>}
             </div>
 
+            <div className="form-group">
+                <label htmlFor="fatherName">পিতার নাম <span className="required">*</span></label>
+                <input
+                    id="fatherName"
+                    type="text"
+                    className={errors.fatherName ? 'error' : ''}
+                    placeholder="যেমন: মো. করিম উদ্দিন"
+                    value={data.fatherName}
+                    onChange={e => onChange('fatherName', e.target.value)}
+                />
+                {errors.fatherName && <div className="error-msg">⚠ {errors.fatherName}</div>}
+            </div>
+
             <div className="form-row">
                 <div className="form-group">
                     <label htmlFor="batchYear">ব্যাচ / পাশের সাল <span className="required">*</span></label>
@@ -113,15 +126,36 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ data, errors, onChange, ani
                 />
             </div>
 
-            <div className="form-group">
-                <label htmlFor="bloodGroup">রক্তের গ্রুপ</label>
-                <input
-                    id="bloodGroup"
-                    type="text"
-                    placeholder="যেমন: B+, O-"
-                    value={data.bloodGroup || ''}
-                    onChange={e => onChange('bloodGroup', e.target.value)}
-                />
+            <div className="form-row">
+                <div className="form-group">
+                    <label htmlFor="bloodGroup">রক্তের গ্রুপ</label>
+                    <input
+                        id="bloodGroup"
+                        type="text"
+                        placeholder="যেমন: B+, O-"
+                        value={data.bloodGroup || ''}
+                        onChange={e => onChange('bloodGroup', e.target.value)}
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="tshirtSize">টি-শার্ট সাইজ <span className="required">*</span></label>
+                    <select
+                        id="tshirtSize"
+                        className={errors.tshirtSize ? 'error' : ''}
+                        value={data.tshirtSize}
+                        onChange={e => onChange('tshirtSize', e.target.value)}
+                    >
+                        <option value="">সাইজ নির্বাচন করুন</option>
+                        <option value="S">S</option>
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                        <option value="XL">XL</option>
+                        <option value="XXL">XXL</option>
+                        <option value="XXXL">XXXL</option>
+                    </select>
+                    {errors.tshirtSize && <div className="error-msg">⚠ {errors.tshirtSize}</div>}
+                </div>
             </div>
         </div>
     );

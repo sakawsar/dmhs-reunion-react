@@ -1,26 +1,27 @@
 import React from 'react';
-import type { FormData, Package } from '../types';
+import type { FormData } from '../types';
+import { calculateTotal } from '../types';
 
 interface ConfirmationProps {
     data: FormData;
-    packages: Package[];
     ticketId: string;
     firestoreDocId?: string | null;
     animClass: string;
 }
 
-const Confirmation: React.FC<ConfirmationProps> = ({ data, packages, ticketId, firestoreDocId, animClass }) => {
-    const selectedPackage = packages.find(p => p.id === data.packageId);
-    const totalAmount = (selectedPackage?.price ?? 0) * (Number(data.seats) || 1);
+const Confirmation: React.FC<ConfirmationProps> = ({ data, ticketId, firestoreDocId, animClass }) => {
+    const guests = Number(data.guests) || 0;
+    const { totalAmount } = calculateTotal(data.batchYear, guests);
 
     const rows = [
         { key: 'পূর্ণ নাম', val: data.fullName },
+        { key: 'পিতার নাম', val: data.fatherName },
         { key: 'ব্যাচ', val: data.batchYear },
         { key: 'ফোন', val: data.phone },
         { key: 'ইমেইল', val: data.email || '—' },
         { key: 'ঠিকানা', val: data.currentCity },
-        { key: 'প্যাকেজ', val: selectedPackage ? `${selectedPackage.icon} ${selectedPackage.name}` : '—' },
-        { key: 'আসন সংখ্যা', val: `${data.seats}` },
+        { key: 'টি-শার্ট সাইজ', val: data.tshirtSize || '—' },
+        { key: 'অতিথি সংখ্যা', val: `${guests} জন` },
         { key: 'খাবারের পছন্দ', val: data.dietaryPref || 'কোনো পছন্দ নেই' },
         { key: 'বিকাশ TxID', val: data.bkashTxId },
         { key: 'মোট পরিশোধ', val: `৳${totalAmount.toLocaleString()}`, highlight: true },

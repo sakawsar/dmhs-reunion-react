@@ -32,7 +32,7 @@ export async function syncToGoogleSheets(payload: SheetsPayload): Promise<void> 
         currentCity: formData.currentCity,
         profession: formData.profession || '',
         packageName,
-        seats: formData.seats,
+        guests: formData.guests,
         totalAmount,
         bkashTxId: formData.bkashTxId,
         bkashPhone: formData.bkashPhone,
