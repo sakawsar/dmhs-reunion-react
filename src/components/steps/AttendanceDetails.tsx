@@ -67,7 +67,7 @@ const AttendanceDetails: React.FC<AttendanceDetailsProps> = ({
                 </div>
             </div>
 
-            <div className="form-group">
+            {/* <div className="form-group">
                 <label htmlFor="guestNames">অতিথি / সঙ্গীর নাম</label>
                 <textarea
                     id="guestNames"
@@ -100,7 +100,7 @@ const AttendanceDetails: React.FC<AttendanceDetailsProps> = ({
                     value={data.specialRequests}
                     onChange={e => onChange('specialRequests', e.target.value)}
                 />
-            </div>
+            </div> */}
         </div>
     );
 };
