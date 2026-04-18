@@ -16,8 +16,9 @@ export interface FormData {
     dietaryPref: string;
     specialRequests: string;
     // Step 3
-    bkashTxId: string;
-    bkashPhone: string;
+    paymentMethod: string;
+    paymentTxId: string;
+    paymentSenderPhone: string;
 }
 
 export interface FormErrors {

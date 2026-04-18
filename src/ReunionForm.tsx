@@ -20,7 +20,7 @@ const INITIAL_FORM: FormData = {
     fullName: '', fatherName: '', batchYear: '', section: '', phone: '', email: '',
     currentCity: '', profession: '', bloodGroup: '', tshirtSize: '', guests: 0,
     guestNames: '', dietaryPref: 'no-preference', specialRequests: '',
-    bkashTxId: '', bkashPhone: '',
+    paymentMethod: 'bkash', paymentTxId: '', paymentSenderPhone: '',
 };
 
 function generateTicketId(): string {
@@ -63,11 +63,12 @@ export default function ReunionForm() {
             // no package validation needed anymore
         }
         if (currentStep === 2) {
-            if (!formData.bkashTxId.trim()) newErrors.bkashTxId = 'ট্রানজেকশন আইডি আবশ্যক';
-            else if (formData.bkashTxId.trim().length < 6) newErrors.bkashTxId = 'ট্রানজেকশন আইডি খুব ছোট মনে হচ্ছে';
-            if (!formData.bkashPhone.trim()) newErrors.bkashPhone = 'প্রেরকের ফোন নম্বর আবশ্যক';
-            else if (!/^01[3-9]\d{8}$/.test(formData.bkashPhone.replace(/\s|-/g, '')))
-                newErrors.bkashPhone = 'একটি সঠিক বিকাশ প্রেরকের নম্বর দিন';
+            if (!formData.paymentMethod) newErrors.paymentMethod = 'পেমেন্ট মাধ্যম নির্বাচন করুন';
+            if (!formData.paymentTxId.trim()) newErrors.paymentTxId = 'ট্রানজেকশন আইডি আবশ্যক';
+            else if (formData.paymentTxId.trim().length < 6) newErrors.paymentTxId = 'ট্রানজেকশন আইডি খুব ছোট মনে হচ্ছে';
+            if (!formData.paymentSenderPhone.trim()) newErrors.paymentSenderPhone = 'প্রেরকের ফোন নম্বর আবশ্যক';
+            else if (!/^01[3-9]\d{8}$/.test(formData.paymentSenderPhone.replace(/\s|-/g, '')))
+                newErrors.paymentSenderPhone = 'একটি সঠিক প্রেরকের নম্বর দিন';
         }
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;

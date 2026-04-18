@@ -8,16 +8,19 @@ interface Registration {
     id: string;
     ticketId: string;
     fullName: string;
+    fatherName: string;
     batchYear: string;
     phone: string;
     email: string | null;
     currentCity: string;
     packageName: string;
-    seats: number;
+    guests: number;
     totalAmount: number;
-    bkashTxId: string;
-    bkashPhone: string;
+    paymentMethod: string;
+    paymentTxId: string;
+    paymentSenderPhone: string;
     dietaryPref: string;
+    tshirtSize: string;
     status: string;
     submittedAt: { seconds: number } | null;
 }
@@ -30,11 +33,11 @@ function formatDate(ts: { seconds: number } | null) {
 }
 
 function exportCSV(rows: Registration[]) {
-    const headers = ['Ticket ID', 'Name', 'Batch', 'Phone', 'Email', 'City', 'Package', 'Seats', 'Amount (৳)', 'bKash TxID', 'Sender Phone', 'Diet', 'Status', 'Submitted At'];
+    const headers = ['Ticket ID', 'Name', 'Father', 'Batch', 'Phone', 'Email', 'City', 'Guests', 'Amount (৳)', 'Payment Method', 'TxID', 'Sender Phone', 'T-Shirt', 'Diet', 'Status', 'Submitted At'];
     const lines = rows.map(r => [
-        r.ticketId, r.fullName, r.batchYear, r.phone, r.email ?? '', r.currentCity,
-        r.packageName, r.seats, r.totalAmount, r.bkashTxId, r.bkashPhone, r.dietaryPref,
-        r.status, formatDate(r.submittedAt),
+        r.ticketId, r.fullName, r.fatherName || '', r.batchYear, r.phone, r.email ?? '', r.currentCity,
+        r.guests, r.totalAmount, r.paymentMethod || 'bkash', r.paymentTxId, r.paymentSenderPhone, r.tshirtSize || '',
+        r.dietaryPref, r.status, formatDate(r.submittedAt),
     ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
     const csv = [headers.join(','), ...lines].join('\n');
     const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
@@ -101,7 +104,6 @@ function AdminDashboard() {
     const [search, setSearch] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
     const [batchFilter, setBatchFilter] = useState('all');
-    const [packageFilter, setPackageFilter] = useState('all');
     const [sortKey, setSortKey] = useState<keyof Registration>('submittedAt');
     const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
 
@@ -121,11 +123,11 @@ function AdminDashboard() {
         load();
     }, []);
 
-    const markConfirmed = async (id: string) => {
+    const markStatus = async (id: string, newStatus: string) => {
         setUpdatingId(id);
         try {
-            await updateDoc(doc(db, 'registrations', id), { status: 'confirmed' });
-            setRegs(prev => prev.map(r => r.id === id ? { ...r, status: 'confirmed' } : r));
+            await updateDoc(doc(db, 'registrations', id), { status: newStatus });
+            setRegs(prev => prev.map(r => r.id === id ? { ...r, status: newStatus } : r));
         } catch {
             alert('Failed to update status.');
         } finally {
@@ -135,14 +137,12 @@ function AdminDashboard() {
 
     // unique values for filters
     const batches = useMemo(() => [...new Set(regs.map(r => r.batchYear))].sort().reverse(), [regs]);
-    const packages = useMemo(() => [...new Set(regs.map(r => r.packageName))].sort(), [regs]);
 
     const filtered = useMemo(() => {
         let out = [...regs];
         if (search) out = out.filter(r => r.fullName.toLowerCase().includes(search.toLowerCase()) || r.phone.includes(search) || r.ticketId.includes(search.toUpperCase()));
         if (statusFilter !== 'all') out = out.filter(r => r.status === statusFilter);
         if (batchFilter !== 'all') out = out.filter(r => r.batchYear === batchFilter);
-        if (packageFilter !== 'all') out = out.filter(r => r.packageName.includes(packageFilter));
 
         out.sort((a, b) => {
             let av: string | number = a[sortKey] as string | number;
@@ -156,7 +156,7 @@ function AdminDashboard() {
             return 0;
         });
         return out;
-    }, [regs, search, statusFilter, batchFilter, packageFilter, sortKey, sortDir]);
+    }, [regs, search, statusFilter, batchFilter, sortKey, sortDir]);
 
     const stats = useMemo(() => ({
         total: regs.length,
@@ -231,12 +231,8 @@ function AdminDashboard() {
                         <option value="all">All Batches</option>
                         {batches.map(b => <option key={b} value={b}>{b}</option>)}
                     </select>
-                    <select value={packageFilter} onChange={e => setPackageFilter(e.target.value)} style={{ padding: '9px 14px', border: '1.5px solid #e2e8f4', borderRadius: 8, fontSize: 13, fontFamily: 'inherit', background: '#f4f6fb', color: '#1a1f36', cursor: 'pointer' }}>
-                        <option value="all">All Packages</option>
-                        {packages.map(p => <option key={p} value={p}>{p}</option>)}
-                    </select>
-                    {(search || statusFilter !== 'all' || batchFilter !== 'all' || packageFilter !== 'all') && (
-                        <button onClick={() => { setSearch(''); setStatusFilter('all'); setBatchFilter('all'); setPackageFilter('all'); }} style={{ padding: '9px 14px', background: '#fff0f4', color: '#E2136E', border: '1.5px solid #ffcce0', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>✕ Clear</button>
+                    {(search || statusFilter !== 'all' || batchFilter !== 'all') && (
+                        <button onClick={() => { setSearch(''); setStatusFilter('all'); setBatchFilter('all'); }} style={{ padding: '9px 14px', background: '#fff0f4', color: '#E2136E', border: '1.5px solid #ffcce0', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>✕ Clear</button>
                     )}
                 </div>
 
@@ -254,11 +250,10 @@ function AdminDashboard() {
                                             ['fullName', 'Name'],
                                             ['batchYear', 'Batch'],
                                             ['phone', 'Phone'],
-                                            ['currentCity', 'City'],
-                                            ['packageName', 'Package'],
-                                            ['seats', 'Seats'],
+                                            ['guests', 'Guests'],
                                             ['totalAmount', 'Amount'],
-                                            ['bkashTxId', 'TxID'],
+                                            ['paymentMethod', 'Method'],
+                                            ['paymentTxId', 'TxID'],
                                             ['status', 'Status'],
                                             ['submittedAt', 'Submitted'],
                                         ] as [keyof Registration, string][]).map(([k, label]) => (
@@ -279,25 +274,41 @@ function AdminDashboard() {
                                             <td style={{ padding: '13px 14px', fontWeight: 600, whiteSpace: 'nowrap' }}>{r.fullName}</td>
                                             <td style={{ padding: '13px 14px', color: '#5a6282' }}>{r.batchYear}</td>
                                             <td style={{ padding: '13px 14px', whiteSpace: 'nowrap' }}>{r.phone}</td>
-                                            <td style={{ padding: '13px 14px', color: '#5a6282' }}>{r.currentCity}</td>
-                                            <td style={{ padding: '13px 14px', whiteSpace: 'nowrap' }}>{r.packageName}</td>
-                                            <td style={{ padding: '13px 14px', textAlign: 'center' }}>{r.seats}</td>
+                                            <td style={{ padding: '13px 14px', textAlign: 'center' }}>{r.guests ?? 0}</td>
                                             <td style={{ padding: '13px 14px', fontWeight: 700, color: '#E2136E', whiteSpace: 'nowrap' }}>৳{(r.totalAmount || 0).toLocaleString()}</td>
-                                            <td style={{ padding: '13px 14px', fontFamily: 'monospace', fontSize: 12 }}>{r.bkashTxId}</td>
+                                            <td style={{ padding: '13px 14px', whiteSpace: 'nowrap' }}>
+                                                {chip(
+                                                    r.paymentMethod === 'bkash' ? '#fff0f6' : r.paymentMethod === 'nagad' ? '#fff8eb' : r.paymentMethod === 'rocket' ? '#f8f0f8' : '#f0f6ff',
+                                                    r.paymentMethod === 'bkash' ? '#E2136E' : r.paymentMethod === 'nagad' ? '#F6921E' : r.paymentMethod === 'rocket' ? '#8B2F8B' : '#1a6fb5',
+                                                    (r.paymentMethod || 'bkash').charAt(0).toUpperCase() + (r.paymentMethod || 'bkash').slice(1)
+                                                )}
+                                            </td>
+                                            <td style={{ padding: '13px 14px', fontFamily: 'monospace', fontSize: 12 }}>{r.paymentTxId}</td>
                                             <td style={{ padding: '13px 14px' }}>
                                                 {r.status === 'confirmed'
                                                     ? chip('#f0fff8', '#15a96a', '✓ Confirmed')
-                                                    : chip('#fffbeb', '#d97706', '⏳ Pending')}
+                                                    : r.status === 'rejected'
+                                                        ? chip('#fff0f0', '#d93025', '✗ Rejected')
+                                                        : chip('#fffbeb', '#d97706', '⏳ Pending')}
                                             </td>
                                             <td style={{ padding: '13px 14px', color: '#9aa3bb', fontSize: 12, whiteSpace: 'nowrap' }}>{formatDate(r.submittedAt)}</td>
-                                            <td style={{ padding: '13px 14px' }}>
+                                            <td style={{ padding: '13px 14px', display: 'flex', gap: 6 }}>
                                                 {r.status !== 'confirmed' && (
                                                     <button
-                                                        onClick={() => markConfirmed(r.id)}
+                                                        onClick={() => markStatus(r.id, 'confirmed')}
                                                         disabled={updatingId === r.id}
                                                         style={{ padding: '6px 12px', background: 'linear-gradient(135deg,#15a96a,#0d8a56)', color: 'white', border: 'none', borderRadius: 7, fontWeight: 700, fontSize: 12, cursor: 'pointer', fontFamily: 'inherit', opacity: updatingId === r.id ? 0.6 : 1, whiteSpace: 'nowrap' }}
                                                     >
                                                         {updatingId === r.id ? '…' : '✓ Confirm'}
+                                                    </button>
+                                                )}
+                                                {r.status !== 'rejected' && r.status !== 'confirmed' && (
+                                                    <button
+                                                        onClick={() => markStatus(r.id, 'rejected')}
+                                                        disabled={updatingId === r.id}
+                                                        style={{ padding: '6px 12px', background: 'linear-gradient(135deg,#d93025,#b71c1c)', color: 'white', border: 'none', borderRadius: 7, fontWeight: 700, fontSize: 12, cursor: 'pointer', fontFamily: 'inherit', opacity: updatingId === r.id ? 0.6 : 1, whiteSpace: 'nowrap' }}
+                                                    >
+                                                        {updatingId === r.id ? '…' : '✗ Reject'}
                                                     </button>
                                                 )}
                                             </td>

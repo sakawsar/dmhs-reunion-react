@@ -45,8 +45,9 @@ export async function saveRegistration(
         specialRequests: formData.specialRequests || null,
 
         // Payment
-        bkashTxId: formData.bkashTxId,
-        bkashPhone: formData.bkashPhone,
+        paymentMethod: formData.paymentMethod,
+        paymentTxId: formData.paymentTxId,
+        paymentSenderPhone: formData.paymentSenderPhone,
 
         // Timestamps
         submittedAt: serverTimestamp(),

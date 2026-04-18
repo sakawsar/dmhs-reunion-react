@@ -470,63 +470,149 @@ textarea {
   box-shadow: 0 2px 8px rgba(226, 19, 110, 0.3);
 }
 
-/* ===================== BKASH SECTION ===================== */
-.bkash-card {
-  background: rgba(226, 19, 110, 0.04);
-  border: 1.5px solid rgba(226, 19, 110, 0.2);
+/* ===================== PAYMENT METHOD CARDS ===================== */
+.payment-method-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 4px;
+}
+
+@media (max-width: 600px) {
+  .payment-method-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.payment-method-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+  padding: 18px 10px 14px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-primary);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.payment-method-card:hover {
+  border-color: var(--pm-color, var(--color-accent));
+  background: white;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
+}
+
+.payment-method-card.selected {
+  border-color: var(--pm-color, var(--color-accent));
+  background: white;
+  box-shadow: 0 0 0 3px rgba(91, 82, 232, 0.1),
+    0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.payment-method-icon {
+  font-size: 26px;
+}
+
+.payment-method-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.payment-method-name-en {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  letter-spacing: 0.04em;
+}
+
+.payment-method-check {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--pm-bg, var(--color-accent));
+  color: white;
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* ===================== PAYMENT INSTRUCTION CARD ===================== */
+.payment-instruction-card {
+  background: rgba(226, 19, 110, 0.03);
+  border: 1.5px solid rgba(0, 0, 0, 0.08);
   border-radius: var(--radius-lg);
   padding: 24px;
   margin-bottom: 24px;
 }
 
-.bkash-header {
+.payment-instruction-header {
   display: flex;
   align-items: center;
   gap: 14px;
   margin-bottom: 20px;
 }
 
-.bkash-logo-pill {
-  background: var(--color-bkash);
+.payment-instruction-pill {
   color: white;
   font-size: 13px;
   font-weight: 800;
-  padding: 6px 16px;
+  padding: 7px 16px;
   border-radius: 8px;
-  box-shadow: var(--shadow-bkash);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+  white-space: nowrap;
 }
 
-.bkash-header-text h3 {
+.payment-instruction-header-text h3 {
   font-size: 15px;
   font-weight: 700;
   color: var(--color-text-primary);
 }
 
-.bkash-header-text p {
+.payment-instruction-header-text p {
   font-size: 12px;
   color: var(--color-text-secondary);
 }
 
-.bkash-steps-list {
+.payment-steps-list {
   list-style: none;
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.bkash-step-item {
+.payment-step-item {
   display: flex;
   gap: 12px;
   align-items: flex-start;
 }
 
-.bkash-step-num {
+.payment-step-num {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: rgba(226, 19, 110, 0.1);
-  border: 1px solid rgba(226, 19, 110, 0.25);
-  color: var(--color-bkash);
+  color: white;
   font-size: 12px;
   font-weight: 700;
   display: flex;
@@ -536,43 +622,17 @@ textarea {
   margin-top: 1px;
 }
 
-.bkash-step-text {
+.payment-step-text {
   font-size: 13.5px;
   color: var(--color-text-secondary);
   line-height: 1.5;
 }
 
-.bkash-step-text strong {
+.payment-step-text strong {
   color: var(--color-text-primary);
 }
 
-.bkash-amount-display {
-  background: white;
-  border: 1.5px solid rgba(226, 19, 110, 0.2);
-  border-radius: var(--radius-md);
-  padding: 16px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 16px 0;
-  box-shadow: 0 2px 8px rgba(226, 19, 110, 0.08);
-}
-
-.bkash-amount-label {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--color-text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.bkash-amount-value {
-  font-size: 26px;
-  font-weight: 800;
-  color: var(--color-bkash);
-}
-
-.bkash-number-display {
+.payment-number-display {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -589,10 +649,10 @@ textarea {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
 }
 
-.bkash-number-display:hover {
-  border-color: var(--color-bkash);
-  color: var(--color-bkash);
-  box-shadow: 0 2px 8px rgba(226, 19, 110, 0.15);
+.payment-number-display:hover {
+  border-color: var(--pm-color, var(--color-bkash));
+  color: var(--pm-color, var(--color-bkash));
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .copy-icon {
@@ -602,10 +662,92 @@ textarea {
 
 .copied-toast {
   font-size: 11px;
-  color: var(--color-success);
-  font-weight: 600;
+  color: white;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
   animation: fadeIn 0.2s ease;
 }
+
+.bank-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+@media (max-width: 500px) {
+  .bank-info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.bank-info-item {
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm, 8px);
+  padding: 12px 16px;
+}
+
+.bank-info-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+  margin-bottom: 4px;
+}
+
+.bank-info-value {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.copy-btn-inline {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.copy-btn-inline:hover {
+  opacity: 1;
+}
+
+.payment-amount-display {
+  background: white;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px 0 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.payment-amount-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.payment-amount-value {
+  font-size: 26px;
+  font-weight: 800;
+}
+
+
 
 /* ===================== BUTTONS ===================== */
 .btn-primary {

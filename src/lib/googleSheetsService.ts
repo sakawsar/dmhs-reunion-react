@@ -34,8 +34,9 @@ export async function syncToGoogleSheets(payload: SheetsPayload): Promise<void> 
         packageName,
         guests: formData.guests,
         totalAmount,
-        bkashTxId: formData.bkashTxId,
-        bkashPhone: formData.bkashPhone,
+        paymentMethod: formData.paymentMethod,
+        paymentTxId: formData.paymentTxId,
+        paymentSenderPhone: formData.paymentSenderPhone,
         status: 'pending_verification',
         submittedAt: new Date().toISOString(),
     };
