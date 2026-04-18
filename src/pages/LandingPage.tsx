@@ -61,6 +61,7 @@ const FAQ = [
 export default function LandingPage() {
     const { days, hours, minutes, seconds } = useCountdown(EVENT_DATE);
     const [openFaq, setOpenFaq] = useState<number | null>(null);
+    const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
     // Registration data for overview
     const [regs, setRegs] = useState<RegSummary[]>([]);
@@ -136,26 +137,44 @@ export default function LandingPage() {
             {/* ── BISMILLAH + NAV (sticky together) ────── */}
             <div style={{ position: 'sticky', top: 0, zIndex: 100 }}>
                 <div className="bismillah-bar">বিসমিল্লাহির রহমানির রহিম</div>
-                <nav style={{ background: 'white', borderBottom: '1px solid #e2e8f4', padding: '14px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 1px 8px rgba(0,0,0,0.06)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <div style={{ width: 42, height: 42, borderRadius: 12, background: 'linear-gradient(135deg,#5b52e8,#E2136E)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, boxShadow: '0 4px 12px rgba(91,82,232,0.3)' }}>🏫</div>
-                    <div>
-                        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#9aa3bb' }}>ধর্মেশ্বর মহেশা বি/এল হাই স্কুল</div>
-                        <div style={{ fontSize: 15, fontWeight: 800, color: '#1a1f36', lineHeight: 1.2 }}>গ্র্যান্ড রিইউনিয়ন ২০২৬</div>
+                <nav className="landing-nav">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                        <div style={{ width: 42, height: 42, borderRadius: 12, background: 'linear-gradient(135deg,#5b52e8,#E2136E)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, boxShadow: '0 4px 12px rgba(91,82,232,0.3)' }}>🏫</div>
+                        <div>
+                            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#9aa3bb' }}>ধর্মেশ্বর মহেশা বি/এল হাই স্কুল</div>
+                            <div style={{ fontSize: 15, fontWeight: 800, color: '#1a1f36', lineHeight: 1.2 }}>গ্র্যান্ড রিইউনিয়ন ২০২৬</div>
+                        </div>
                     </div>
-                </div>
-                <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
-                    <a href="#about" style={{ fontSize: 14, fontWeight: 500, color: '#5a6282', textDecoration: 'none' }}>পরিচিতি</a>
-                    <a href="#schedule" style={{ fontSize: 14, fontWeight: 500, color: '#5a6282', textDecoration: 'none' }}>সূচি</a>
-                    <a href="#packages" style={{ fontSize: 14, fontWeight: 500, color: '#5a6282', textDecoration: 'none' }}>প্যাকেজ</a>
-                    <a href="#registrations" style={{ fontSize: 14, fontWeight: 500, color: '#5a6282', textDecoration: 'none' }}>নিবন্ধন</a>
-                    <a href="#faq" style={{ fontSize: 14, fontWeight: 500, color: '#5a6282', textDecoration: 'none' }}>জিজ্ঞাসা</a>
-                    <Link to="/track" style={{ fontSize: 14, fontWeight: 500, color: '#5b52e8', textDecoration: 'none' }}>🔍 ট্র্যাক</Link>
-                    <Link to="/register" style={{ background: 'linear-gradient(135deg,#5b52e8,#7c74f0)', color: 'white', padding: '9px 20px', borderRadius: 10, fontWeight: 700, fontSize: 14, textDecoration: 'none', boxShadow: '0 4px 14px rgba(91,82,232,0.3)' }}>
-                        এখনই রেজিস্ট্রেশন করুন →
-                    </Link>
-                </div>
-            </nav>
+
+                    {/* Desktop links */}
+                    <div className="nav-links-desktop">
+                        <a href="#about">পরিচিতি</a>
+                        <a href="#schedule">সূচি</a>
+                        <a href="#packages">প্যাকেজ</a>
+                        <a href="#registrations">নিবন্ধন</a>
+                        <a href="#faq">জিজ্ঞাসা</a>
+                        <Link to="/track" style={{ color: '#5b52e8' }}>🔍 ট্র্যাক</Link>
+                        <Link to="/register" className="nav-register-btn">এখনই রেজিস্ট্রেশন করুন →</Link>
+                    </div>
+
+                    {/* Hamburger button (mobile) */}
+                    <button className="nav-hamburger" onClick={() => setMobileNavOpen(prev => !prev)} aria-label="মেনু">
+                        {mobileNavOpen ? '✕' : '☰'}
+                    </button>
+                </nav>
+
+                {/* Mobile drawer */}
+                {mobileNavOpen && (
+                    <div className="nav-mobile-drawer">
+                        <a href="#about" onClick={() => setMobileNavOpen(false)}>পরিচিতি</a>
+                        <a href="#schedule" onClick={() => setMobileNavOpen(false)}>সূচি</a>
+                        <a href="#packages" onClick={() => setMobileNavOpen(false)}>প্যাকেজ</a>
+                        <a href="#registrations" onClick={() => setMobileNavOpen(false)}>নিবন্ধন</a>
+                        <a href="#faq" onClick={() => setMobileNavOpen(false)}>জিজ্ঞাসা</a>
+                        <Link to="/track" onClick={() => setMobileNavOpen(false)} style={{ color: '#5b52e8' }}>🔍 ট্র্যাক</Link>
+                        <Link to="/register" onClick={() => setMobileNavOpen(false)} className="nav-register-btn" style={{ textAlign: 'center' }}>এখনই রেজিস্ট্রেশন করুন →</Link>
+                    </div>
+                )}
             </div>
 
             {/* ── HERO ───────────────────────────────────── */}

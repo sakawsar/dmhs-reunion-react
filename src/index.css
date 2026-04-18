@@ -126,6 +126,132 @@ body {
   z-index: 101;
 }
 
+/* ===================== LANDING NAV ===================== */
+.landing-nav {
+  background: white;
+  border-bottom: 1px solid #e2e8f4;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+}
+
+.nav-links-desktop {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.nav-links-desktop a {
+  font-size: 14px;
+  font-weight: 500;
+  color: #5a6282;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.nav-links-desktop a:hover {
+  color: #5b52e8;
+}
+
+.nav-register-btn {
+  background: linear-gradient(135deg, #5b52e8, #7c74f0);
+  color: white !important;
+  padding: 9px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(91, 82, 232, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: inline-block;
+}
+
+.nav-register-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(91, 82, 232, 0.35);
+}
+
+.nav-hamburger {
+  display: none;
+  background: none;
+  border: 1.5px solid #e2e8f4;
+  border-radius: 8px;
+  width: 42px;
+  height: 42px;
+  font-size: 22px;
+  cursor: pointer;
+  color: #1a1f36;
+  transition: all 0.2s;
+}
+
+.nav-hamburger:hover {
+  border-color: #5b52e8;
+  color: #5b52e8;
+}
+
+.nav-mobile-drawer {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  background: white;
+  padding: 12px 24px 20px;
+  border-bottom: 1.5px solid #e2e8f4;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  animation: slideDown 0.25s ease;
+}
+
+.nav-mobile-drawer a {
+  display: block;
+  padding: 12px 16px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1f36;
+  text-decoration: none;
+  border-radius: 10px;
+  transition: background 0.15s;
+}
+
+.nav-mobile-drawer a:hover {
+  background: #f0f2ff;
+  color: #5b52e8;
+}
+
+.nav-mobile-drawer .nav-register-btn {
+  margin-top: 8px;
+  padding: 14px 20px;
+  text-align: center;
+  color: white !important;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-links-desktop {
+    display: none;
+  }
+
+  .nav-hamburger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-mobile-drawer {
+    display: flex;
+  }
+}
+
 /* ===================== HEADER ===================== */
 .site-header {
   width: 100%;
