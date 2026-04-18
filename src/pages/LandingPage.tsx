@@ -198,15 +198,15 @@ export default function LandingPage() {
                     <p style={{ fontSize: 24, color: '#5a6282', margin: '0 0 32px' }}>
                         যেখানে তোমার আমার শৈশব, কৈশোর ও যৌবনের শ্রেষ্ঠ সময়ের স্মৃতি এখনো খেলা করে।
                     </p>
-                    <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 40 }}>
+                    {/* <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 40 }}>
                         {[{ icon: '📅', label: '৩০ মে, ২০২৬', color: '#d97706' }, { icon: '📍', label: 'স্কুল মাঠ, DMHS', color: '#E2136E' }, { icon: '🕔', label: 'বিকাল ৪:০০ থেকে', color: '#5b52e8' }].map(b => (
                             <span key={b.label} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'white', border: '1.5px solid #e2e8f4', borderRadius: 999, padding: '7px 16px', fontSize: 13, fontWeight: 600, color: b.color, boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
                                 {b.icon} {b.label}
                             </span>
                         ))}
-                    </div>
+                    </div> */}
                     <Link to="/register" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'linear-gradient(135deg,#5b52e8,#7c74f0)', color: 'white', padding: '16px 40px', borderRadius: 14, fontWeight: 800, fontSize: 17, textDecoration: 'none', boxShadow: '0 8px 28px rgba(91,82,232,0.35)', transition: 'transform 0.2s' }}>
-                        আজই রেজিস্ট্রেশন করুন · বিকাশ পেমেন্ট ✓
+                        আজই রেজিস্ট্রেশন করুন
                     </Link>
                     <div style={{ marginTop: 12, fontSize: 13, color: '#9aa3bb' }}>দ্রুত · নিরাপদ · তাৎক্ষণিক নিশ্চিতকরণ</div>
                 </div>
