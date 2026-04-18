@@ -48,6 +48,7 @@ const PACKAGES_INFO = [
     { icon: '🧑', name: 'একক', price: '৳১,০০০', desc: '১ জন · ডিনার + সম্পূর্ণ অনুষ্ঠান', color: '#5b52e8' },
     { icon: '👫', name: 'দম্পতি', price: '৳১,৫০০', desc: '২ জন · ডিনার + সম্পূর্ণ অনুষ্ঠান', color: '#E2136E', popular: true },
     { icon: '👨‍👩‍👧‍👦', name: 'পরিবার', price: '৳২,২০০', desc: '৪ জন পর্যন্ত · সম্পূর্ণ প্যাকেজ', color: '#15a96a' },
+    { icon: '📖', name: 'ছাত্র ছিলাম', price: '৳১,০০০', desc: '১ জন · প্রাক্তন ছাত্র · ডিনার + অনুষ্ঠান', color: '#d97706' },
 ];
 
 const FAQ = [

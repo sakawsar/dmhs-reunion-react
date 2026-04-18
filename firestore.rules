@@ -14,7 +14,7 @@ service cloud.firestore {
         request.resource.data.phone is string &&
         request.resource.data.phone.size() >= 11 &&
         request.resource.data.batchYear is string &&
-        request.resource.data.batchYear.size() == 4 &&
+        request.resource.data.batchYear.size() > 0 &&
         request.resource.data.paymentMethod is string &&
         request.resource.data.paymentTxId is string &&
         request.resource.data.paymentTxId.size() >= 6 &&

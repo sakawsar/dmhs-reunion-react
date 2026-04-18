@@ -8,7 +8,7 @@ interface PersonalInfoProps {
     animClass: string;
 }
 
-const BATCH_YEARS = Array.from({ length: 35 }, (_, i) => 2025 - i).map(y => y.toString());
+const BATCH_YEARS = Array.from({ length: 2025 - 1945 + 1 }, (_, i) => (2025 - i).toString());
 
 const PersonalInfo: React.FC<PersonalInfoProps> = ({ data, errors, onChange, animClass }) => {
     return (
@@ -44,7 +44,7 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ data, errors, onChange, ani
 
             <div className="form-row">
                 <div className="form-group">
-                    <label htmlFor="batchYear">ব্যাচ / পাশের সাল <span className="required">*</span></label>
+                    <label htmlFor="batchYear">ব্যাচ<span className="required">*</span></label>
                     <select
                         id="batchYear"
                         className={errors.batchYear ? 'error' : ''}
@@ -52,6 +52,7 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ data, errors, onChange, ani
                         onChange={e => onChange('batchYear', e.target.value)}
                     >
                         <option value="">সাল নির্বাচন করুন</option>
+                        <option value="ছাত্র ছিলাম" style={{ fontWeight: 600 }}>ছাত্র ছিলাম (Was Student)</option>
                         {BATCH_YEARS.map(y => (
                             <option key={y} value={y}>{y}</option>
                         ))}
