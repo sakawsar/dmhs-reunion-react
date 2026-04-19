@@ -426,7 +426,7 @@ export default function LandingPage() {
                 <div style={{ fontSize: 13, display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
                     <Link to="/track" style={{ color: '#a5a0ff', textDecoration: 'none' }}>🔍 রেজিস্ট্রেশন ট্র্যাক</Link>
                     <span>·</span>
-                    <span>📞 <a href="tel:01700000000" style={{ color: '#a5a0ff', textDecoration: 'none' }}>০১৭০০-০০০০০০</a></span>
+                    <span>📞 <a href="tel:01964614377" style={{ color: '#a5a0ff', textDecoration: 'none' }}>০১৭০০-০০০০০০</a></span>
                     <span>·</span>
                     <span>✉️ <a href="mailto:reunion@dmhs.edu.bd" style={{ color: '#a5a0ff', textDecoration: 'none' }}>reunion@dmhs.edu.bd</a></span>
                 </div>

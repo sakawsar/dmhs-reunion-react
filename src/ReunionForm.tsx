@@ -161,7 +161,7 @@ export default function ReunionForm() {
 
             <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '13px', color: 'var(--color-text-muted)', lineHeight: '1.8' }}>
                 <div>🏫 ধর্ম্মেশ্বর মহেশা দ্বি-মূখী উচ্চ বিদ্যালয় প্রাক্তন ছাত্র সমিতি</div>
-                <div>সাহায্যের জন্য কল করুন <a href="tel:01700000000" style={{ color: 'var(--color-accent)' }}>০১৭০০-০০০০০০</a> · reunion@dmhs.edu.bd</div>
+                <div>সাহায্যের জন্য কল করুন <a href="tel:01964614377" style={{ color: 'var(--color-accent)' }}>০১৭০০-০০০০০০</a> · reunion@dmhs.edu.bd</div>
             </div>
         </div>
     );
