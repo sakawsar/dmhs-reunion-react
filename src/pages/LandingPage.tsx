@@ -143,7 +143,7 @@ export default function LandingPage() {
                         <div style={{ width: 42, height: 42, borderRadius: 12, background: 'linear-gradient(135deg,#5b52e8,#E2136E)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, boxShadow: '0 4px 12px rgba(91,82,232,0.3)' }}>🏫</div>
                         <div>
                             <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#9aa3bb' }}>ধর্ম্মেশ্বর মহেশা দ্বি-মূখী উচ্চ বিদ্যালয়</div>
-                            <div style={{ fontSize: 15, fontWeight: 800, color: '#1a1f36', lineHeight: 1.2 }}>গ্র্যান্ড রিইউনিয়ন ২০২৬</div>
+                            <div style={{ fontSize: 15, fontWeight: 800, color: '#1a1f36', lineHeight: 1.2 }}>৮১ বছরপূর্তি উৎসব - ২০২৬</div>
                         </div>
                     </div>
 
@@ -231,7 +231,7 @@ export default function LandingPage() {
                     <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5b52e8', marginBottom: 10 }}>অনুষ্ঠান সম্পর্কে</div>
                     <h2 style={{ fontSize: 34, fontWeight: 900, margin: 0 }}>এক স্মরণীয় সন্ধ্যা</h2>
                     <p style={{ fontSize: 16, color: '#5a6282', marginTop: 12, lineHeight: 1.8 }}>
-                        ধর্ম্মেশ্বর মহেশা দ্বি-মূখী উচ্চ বিদ্যালয় গ্র্যান্ড রিইউনিয়ন ২০২৬ — সকল ব্যাচের প্রাক্তন ছাত্রদের জন্য সংস্কৃতি, ডিনার ও পুনর্মিলনের এক দারুণ সন্ধ্যা। আপনি ১৯৯০ দশকে বা ২০২০ দশকে পাশ করুন — সবাইকে স্বাগত।
+                        ধর্ম্মেশ্বর মহেশা দ্বি-মূখী উচ্চ বিদ্যালয় ৮১ বছরপূর্তি উৎসব - ২০২৬ — সকল ব্যাচের প্রাক্তন ছাত্রদের জন্য সংস্কৃতি, ডিনার ও পুনর্মিলনের এক দারুণ সন্ধ্যা। আপনি ১৯৯০ দশকে বা ২০২০ দশকে পাশ করুন — সবাইকে স্বাগত।
                     </p>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 20 }}>
@@ -422,7 +422,7 @@ export default function LandingPage() {
             <footer style={{ background: '#1a1f36', color: 'rgba(255,255,255,0.7)', textAlign: 'center', padding: '40px 24px' }}>
                 <div style={{ fontSize: 22, marginBottom: 8 }}>🏫</div>
                 <div style={{ fontWeight: 700, color: 'white', fontSize: 15, marginBottom: 4 }}>ধর্ম্মেশ্বর মহেশা দ্বি-মূখী উচ্চ বিদ্যালয় প্রাক্তন ছাত্র সমিতি</div>
-                <div style={{ fontSize: 13, marginBottom: 16 }}>গ্র্যান্ড রিইউনিয়ন ২০২৬ · ৩০ মে · স্কুল মাঠ</div>
+                <div style={{ fontSize: 13, marginBottom: 16 }}>৮১ বছরপূর্তি উৎসব - ২০২৬ · ৩০ মে · স্কুল মাঠ</div>
                 <div style={{ fontSize: 13, display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
                     <Link to="/track" style={{ color: '#a5a0ff', textDecoration: 'none' }}>🔍 রেজিস্ট্রেশন ট্র্যাক</Link>
                     <span>·</span>
