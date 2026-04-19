@@ -55,7 +55,7 @@ const FAQ = [
     { q: 'কিভাবে রেজিস্ট্রেশন করবো?', a: '"এখনই রেজিস্ট্রেশন করুন" বাটনে ক্লিক করুন, ৪টি ধাপে আপনার তথ্য পূরণ করুন এবং বিকাশে পেমেন্ট সম্পন্ন করুন।' },
     { q: 'কনফার্মেশন কখন পাবো?', a: 'আপনার বিকাশ পেমেন্ট যাচাই করার ২৪ ঘণ্টার মধ্যে।' },
     { q: 'পরিবার নিয়ে আসতে পারবো?', a: 'হ্যাঁ! রেজিস্ট্রেশনের সময় দম্পতি বা পরিবার প্যাকেজ বেছে নিন।' },
-    { q: 'পেমেন্ট করেছি কিন্তু কনফার্মেশন পাইনি?', a: 'আপনার বিকাশ ট্রানজেকশন আইডি সহ ০১৭০০-০০০০০০ নম্বরে যোগাযোগ করুন।' },
+    { q: 'পেমেন্ট করেছি কিন্তু কনফার্মেশন পাইনি?', a: 'আপনার বিকাশ ট্রানজেকশন আইডি সহ 01964-614377 নম্বরে যোগাযোগ করুন।' },
     { q: 'পার্কিং সুবিধা আছে?', a: 'হ্যাঁ, স্কুল মাঠ প্রাঙ্গণে পার্কিং সুবিধা আছে।' },
 ];
 
@@ -426,7 +426,7 @@ export default function LandingPage() {
                 <div style={{ fontSize: 13, display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
                     <Link to="/track" style={{ color: '#a5a0ff', textDecoration: 'none' }}>🔍 রেজিস্ট্রেশন ট্র্যাক</Link>
                     <span>·</span>
-                    <span>📞 <a href="tel:01964614377" style={{ color: '#a5a0ff', textDecoration: 'none' }}>০১৭০০-০০০০০০</a></span>
+                    <span>📞 <a href="tel:01964614377" style={{ color: '#a5a0ff', textDecoration: 'none' }}>01964-614377</a></span>
                     <span>·</span>
                     <span>✉️ <a href="mailto:reunion@dmhs.edu.bd" style={{ color: '#a5a0ff', textDecoration: 'none' }}>reunion@dmhs.edu.bd</a></span>
                 </div>
