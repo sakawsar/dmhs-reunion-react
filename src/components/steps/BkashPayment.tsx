@@ -20,7 +20,7 @@ const PAYMENT_METHODS = [
         icon: '💳',
         number: '01964-614377',
         dial: '*247#',
-        action: 'সেন্ড মানি',
+        action: 'পেমেন্ট',
     },
     // {
     //     id: 'nagad',
