@@ -229,16 +229,19 @@ export default function LandingPage() {
             <section id="about" style={{ maxWidth: 800, margin: '0 auto', padding: '72px 24px' }}>
                 <div style={{ textAlign: 'center', marginBottom: 48 }}>
                     <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5b52e8', marginBottom: 10 }}>অনুষ্ঠান সম্পর্কে</div>
-                    <h2 style={{ fontSize: 34, fontWeight: 900, margin: 0 }}>এক স্মরণীয় দিন</h2>
+                    <h2 style={{ fontSize: 34, fontWeight: 900, margin: 0 }}>একটি স্মরণীয় দিন</h2>
                     <p style={{ fontSize: 16, color: '#5a6282', marginTop: 12, lineHeight: 1.8 }}>
-                        ধর্ম্মেশ্বর মহেশা দ্বি-মূখী উচ্চ বিদ্যালয় ৮১ বছরপূর্তি উৎসব - ২০২৬ — সকল ব্যাচের প্রাক্তন ছাত্রদের জন্য সংস্কৃতি, লাঞ্চ ও পুনর্মিলনের এক দারুণ দিন। আপনি ১৯৯০ দশকে বা ২০২০ দশকে পাশ করুন — সবাইকে স্বাগত।
+                        প্রিয় প্রাক্তন শিক্ষার্থী, আপনাদের জন্য অপেক্ষা করছে এক আনন্দঘন পুনর্মিলনের দিন! সকল ব্যাচের শিক্ষার্থীদের নিয়ে থাকছে মনোমুগ্ধকর সাংস্কৃতিক অনুষ্ঠান, উষ্ণ অভ্যর্থনার ওয়েলকাম ড্রিংকস, সুস্বাদু দুপুরের খাবার, মুখরোচক স্ন্যাক্স—আর সবচেয়ে বড় কথা, পুরোনো স্মৃতি রোমন্থনের এক অসাধারণ সুযোগ। আসুন, আবার একসাথে ফিরে যাই সেই সোনালি দিনে—বন্ধুত্ব, হাসি আর স্মৃতির টানে।
+                    </p>
+                    <p style={{ fontSize: 16, fontWeight: 700, color: '#5a6282', marginTop: 12, lineHeight: 1.8 }}>
+                        ধর্ম্মেশ্বর মহেশা দ্বি-মূখী উচ্চ বিদ্যালয়ের গর্বিত শিক্ষার্থী হিসেবে আপনাকে স্বাগতম। 💙
                     </p>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 20 }}>
                     {[
                         { icon: '🎤', title: 'সাংস্কৃতিক অনুষ্ঠান', desc: 'প্রাক্তন ছাত্রদের গান, কবিতা ও পরিবেশনা' },
-                        { icon: '🍽️', title: 'গ্র্যান্ড লাঞ্চ', desc: 'সকল নিবন্ধিত অতিথিদের জন্য সম্পূর্ণ বুফে লাঞ্চ' },
-                        { icon: '📸', title: 'স্মৃতির পথ', desc: 'স্কুল জীবনের স্লাইডশো ও ইয়ারবুক মুহূর্ত' },
+                        { icon: '🍽️', title: 'দুপুরের খাবার', desc: 'সকল নিবন্ধিত অতিথিদের জন্য দুপুরের খাবার' },
+                        { icon: '📸', title: 'স্মৃতির গ্যালারী', desc: 'যেখানে ছবির ফ্রেমে জীবন্ত হয়ে ওঠে আমাদের সেই সোনালি দিনগুলোর অমূল্য মুহূর্ত' },
                         { icon: '🏆', title: 'পুরস্কার বিতরণ', desc: 'বিশেষ অবদানকারী প্রাক্তন ছাত্রদের সম্মাননা' },
                     ].map(c => (
                         <div key={c.title} style={{ background: 'white', border: '1.5px solid #e2e8f4', borderRadius: 16, padding: '24px 20px', textAlign: 'center', boxShadow: '0 2px 12px rgba(91,82,232,0.06)' }}>
@@ -251,7 +254,7 @@ export default function LandingPage() {
             </section>
 
             {/* ── SCHEDULE ──────────────────────────────── */}
-            <section id="schedule" style={{ background: 'white', padding: '72px 24px' }}>
+            <section id="schedule" style={{ display: "none", background: 'white', padding: '72px 24px' }}>
                 <div style={{ maxWidth: 700, margin: '0 auto' }}>
                     <div style={{ textAlign: 'center', marginBottom: 48 }}>
                         <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#E2136E', marginBottom: 10 }}>৩০ মে, ২০২৬</div>
