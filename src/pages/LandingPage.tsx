@@ -199,7 +199,7 @@ export default function LandingPage() {
                         যেখানে তোমার আমার শৈশব, কৈশোর ও যৌবনের শ্রেষ্ঠ সময়ের স্মৃতি এখনো খেলা করে।
                     </p>
                     {/* <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 40 }}>
-                        {[{ icon: '📅', label: '৩০ মে, ২০২৬', color: '#d97706' }, { icon: '📍', label: 'স্কুল মাঠ, DMHS', color: '#E2136E' }, { icon: '🕔', label: 'বিকাল ৪:০০ থেকে', color: '#5b52e8' }].map(b => (
+                        {[{ icon: '📅', label: '৩১ মে ২০২৬', color: '#d97706' }, { icon: '📍', label: 'স্কুল মাঠ, DMHS', color: '#E2136E' }, { icon: '🕔', label: 'বিকাল ৪:০০ থেকে', color: '#5b52e8' }].map(b => (
                             <span key={b.label} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'white', border: '1.5px solid #e2e8f4', borderRadius: 999, padding: '7px 16px', fontSize: 13, fontWeight: 600, color: b.color, boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
                                 {b.icon} {b.label}
                             </span>
@@ -257,7 +257,7 @@ export default function LandingPage() {
             <section id="schedule" style={{ display: "none", background: 'white', padding: '72px 24px' }}>
                 <div style={{ maxWidth: 700, margin: '0 auto' }}>
                     <div style={{ textAlign: 'center', marginBottom: 48 }}>
-                        <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#E2136E', marginBottom: 10 }}>৩০ মে, ২০২৬</div>
+                        <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#E2136E', marginBottom: 10 }}>৩১ মে ২০২৬</div>
                         <h2 style={{ fontSize: 34, fontWeight: 900, margin: 0 }}>অনুষ্ঠানসূচি</h2>
                     </div>
                     <div style={{ position: 'relative' }}>

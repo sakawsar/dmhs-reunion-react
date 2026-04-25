@@ -125,7 +125,7 @@ export default function ReunionForm() {
                     {' '}সম্পন্ন করুন
                 </h1>
                 <p style={{ marginTop: '6px', fontSize: '13px', color: '#5a6282', position: 'relative', zIndex: 1 }}>
-                    📅 ৩০ মে, ২০২৬ · 📍 স্কুল মাঠ · বিকাশে নিরাপদ পেমেন্ট
+                    📅 ৩১ মে ২০২৬ · 📍 স্কুল মাঠ · বিকাশে নিরাপদ পেমেন্ট
                 </p>
             </div>
 

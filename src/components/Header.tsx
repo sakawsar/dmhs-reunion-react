@@ -7,7 +7,7 @@ const Header: React.FC = () => {
             <div className="header-text">
                 <div className="header-school">ধর্ম্মেশ্বর মহেশা দ্বি-মূখী উচ্চ বিদ্যালয়</div>
                 <div className="header-event">৮১ বছরপূর্তি উৎসব - ২০২৬</div>
-                <div className="header-date">📅 ৩০ মে, ২০২৬ · স্কুল মাঠ</div>
+                <div className="header-date">📅 ৩১ মে ২০২৬ · স্কুল মাঠ</div>
             </div>
         </header>
     );
