@@ -44,24 +44,24 @@ const PAYMENT_METHODS = [
     //     dial: '*322#',
     //     action: 'সেন্ড মানি',
     // },
-    // {
-    //     id: 'bank',
-    //     name: 'ব্যাংক ট্রান্সফার',
-    //     nameEn: 'Bank Transfer',
-    //     color: '#1a6fb5',
-    //     bg: 'linear-gradient(135deg, #1a6fb5 0%, #0d4f80 100%)',
-    //     icon: '🏦',
-    //     number: '',
-    //     dial: '',
-    //     action: '',
-    // },
+    {
+        id: 'bank',
+        name: 'ব্যাংক ট্রান্সফার',
+        nameEn: 'Bank Transfer',
+        color: '#1a6fb5',
+        bg: 'linear-gradient(135deg, #1a6fb5 0%, #0d4f80 100%)',
+        icon: '🏦',
+        number: '',
+        dial: '',
+        action: '',
+    },
 ];
 
 const BANK_INFO = {
-    bankName: 'ABC Bank, XYZ Branch',
-    accountName: 'DMHS Reunion Committee',
-    accountNumber: 'XXXX-XXXX-XXXX-XXXX',
-    routingNumber: '123456789',
+    bankName: 'Sonali Bnk Limited, Mirbagh Branch',
+    accountName: 'ধর্ম্মেশ্বর মহেশা দ্বি-মূখী উচ্চ বিদ্যালয় ৮১ বছরপূর্তি উৎসব - ২০২৬',
+    accountNumber: '5015302000585',
+    routingNumber: '200851062',
 };
 
 const PaymentStep: React.FC<PaymentStepProps> = ({ data, errors, onChange, animClass }) => {
