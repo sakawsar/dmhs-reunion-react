@@ -11,7 +11,7 @@ interface ConfirmationProps {
 
 const Confirmation: React.FC<ConfirmationProps> = ({ data, ticketId, firestoreDocId, animClass }) => {
     const guests = Number(data.guests) || 0;
-    const { totalAmount } = calculateTotal(data.batchYear, guests);
+    const { totalAmount } = calculateTotal(guests);
 
     const PAYMENT_LABELS: Record<string, string> = {
         bkash: 'বিকাশ', nagad: 'নগদ', rocket: 'রকেট', bank: 'ব্যাংক ট্রান্সফার'

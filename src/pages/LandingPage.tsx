@@ -45,9 +45,9 @@ const SCHEDULE = [
 ];
 
 const PACKAGES_INFO = [
-    { icon: '🎓', name: 'ব্যাচ ২০১৮–২০২৫', price: '৳৭০০', desc: '১ জন · লাঞ্চ + সম্পূর্ণ অনুষ্ঠান', color: '#5b52e8', popular: true },
-    { icon: '🏫', name: 'ব্যাচ ১৯৪৫–২০১৭', price: '৳১,০০০', desc: '১ জন · লাঞ্চ + সম্পূর্ণ অনুষ্ঠান', color: '#E2136E' },
-    { icon: '📖', name: 'ছাত্র ছিলাম', price: '৳১,০০০', desc: '১ জন · প্রাক্তন ছাত্র · লাঞ্চ + অনুষ্ঠান', color: '#d97706' },
+    // { icon: '🎓', name: 'ব্যাচ ২০১৮–২০২৫', price: '৳৭০০', desc: '১ জন · লাঞ্চ + সম্পূর্ণ অনুষ্ঠান', color: '#5b52e8', popular: true },
+    { icon: '🏫', name: 'ব্যাচ ১৯৪৫–২০২৫', price: '৳৫০০', desc: '১ জন · লাঞ্চ + সম্পূর্ণ অনুষ্ঠান', color: '#E2136E' },
+    { icon: '📖', name: 'ছাত্র ছিলাম', price: '৳৫০০', desc: '১ জন · প্রাক্তন ছাত্র · লাঞ্চ + অনুষ্ঠান', color: '#d97706' },
     { icon: '👥', name: 'অতিরিক্ত অতিথি', price: '৳৫০০', desc: 'প্রতিজন · যেকোনো ব্যাচের সাথে যোগ করুন', color: '#15a96a' },
 ];
 
@@ -286,8 +286,8 @@ export default function LandingPage() {
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 20 }}>
                         {PACKAGES_INFO.map(pkg => (
-                            <div key={pkg.name} style={{ background: 'white', border: pkg.popular ? `2px solid ${pkg.color}` : '1.5px solid #e2e8f4', borderRadius: 18, padding: '28px 20px', textAlign: 'center', boxShadow: pkg.popular ? `0 4px 20px ${pkg.color}25` : '0 2px 12px rgba(0,0,0,0.06)', position: 'relative' }}>
-                                {pkg.popular && <div style={{ position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)', background: pkg.color, color: 'white', fontSize: 10, fontWeight: 800, padding: '3px 12px', borderRadius: 999 }}>⭐ সবচেয়ে জনপ্রিয়</div>}
+                            <div key={pkg.name} style={{ background: 'white', border: '1.5px solid #e2e8f4', borderRadius: 18, padding: '28px 20px', textAlign: 'center', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', position: 'relative' }}>
+                                {/* {pkg.popular && <div style={{ position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)', background: pkg.color, color: 'white', fontSize: 10, fontWeight: 800, padding: '3px 12px', borderRadius: 999 }}>⭐ সবচেয়ে জনপ্রিয়</div>} */}
                                 <div style={{ fontSize: 36, marginBottom: 12 }}>{pkg.icon}</div>
                                 <div style={{ fontWeight: 800, fontSize: 16, marginBottom: 6 }}>{pkg.name}</div>
                                 <div style={{ fontSize: 28, fontWeight: 900, color: pkg.color, marginBottom: 8 }}>{pkg.price}</div>

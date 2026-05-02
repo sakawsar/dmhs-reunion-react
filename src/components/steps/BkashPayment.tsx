@@ -68,7 +68,7 @@ const PaymentStep: React.FC<PaymentStepProps> = ({ data, errors, onChange, animC
     const [copiedNumber, setCopiedNumber] = useState(false);
 
     const guests = Number(data.guests) || 0;
-    const { baseAmount, guestCharge, totalAmount } = calculateTotal(data.batchYear, guests);
+    const { baseAmount, guestCharge, totalAmount } = calculateTotal(guests);
     const selectedMethod = PAYMENT_METHODS.find(m => m.id === data.paymentMethod) || PAYMENT_METHODS[0];
 
     const handleCopy = (text: string) => {

@@ -13,7 +13,7 @@ const AttendanceDetails: React.FC<AttendanceDetailsProps> = ({
     data, onChange, animClass
 }) => {
     const guests = Number(data.guests) || 0;
-    const { baseAmount, guestCharge, totalAmount } = calculateTotal(data.batchYear, guests);
+    const { baseAmount, guestCharge, totalAmount } = calculateTotal(guests);
     const batchYear = parseInt(data.batchYear, 10);
     const isJunior = !isNaN(batchYear) && batchYear >= 2018 && batchYear <= 2025;
 

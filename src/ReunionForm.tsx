@@ -84,7 +84,7 @@ export default function ReunionForm() {
         setIsSubmitting(true);
         setSubmitError(null);
         try {
-            const { totalAmount } = calculateTotal(formData.batchYear, Number(formData.guests) || 0);
+            const { totalAmount } = calculateTotal(Number(formData.guests) || 0);
             const docId = await saveRegistration({ formData, ticketId, packageName: `ব্যাচ ${formData.batchYear}`, totalAmount });
             setFirestoreDocId(docId);
             setDirection('forward');
