@@ -162,7 +162,7 @@ function AdminDashboard() {
         confirmed: regs.filter(r => r.status === 'confirmed').length,
         pending: regs.filter(r => r.status === 'pending_verification').length,
         revenue: regs.reduce((s, r) => {
-            if (r.status == "rejected") {
+            if (r.status != "confirmed") {
                 return s
             }
             return s + (r.totalAmount || 0)
@@ -297,7 +297,7 @@ function AdminDashboard() {
                                             </td>
                                             <td style={{ padding: '13px 14px', color: '#9aa3bb', fontSize: 12, whiteSpace: 'nowrap' }}>{formatDate(r.submittedAt)}</td>
                                             <td style={{ padding: '13px 14px', display: 'flex', gap: 6 }}>
-                                                {r.status !== 'confirmed' && (
+                                                {r.status !== 'rejected' && r.status !== 'confirmed' && (
                                                     <button
                                                         onClick={() => markStatus(r.id, 'confirmed')}
                                                         disabled={updatingId === r.id}
@@ -306,7 +306,7 @@ function AdminDashboard() {
                                                         {updatingId === r.id ? '…' : '✓ Confirm'}
                                                     </button>
                                                 )}
-                                                {r.status !== 'rejected' && r.status !== 'confirmed' && (
+                                                {r.status !== 'rejected' && (
                                                     <button
                                                         onClick={() => markStatus(r.id, 'rejected')}
                                                         disabled={updatingId === r.id}

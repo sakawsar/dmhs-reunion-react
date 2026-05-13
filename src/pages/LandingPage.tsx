@@ -77,7 +77,7 @@ export default function LandingPage() {
             try {
                 const q = query(collection(db, 'registrations'), orderBy('submittedAt', 'desc'));
                 const snap = await getDocs(q);
-                setRegs(snap.docs.map(d => {
+                const updated_snap = snap.docs.map(d => {
                     const data = d.data();
                     return {
                         fullName: data.fullName || '',
@@ -88,6 +88,10 @@ export default function LandingPage() {
                         status: data.status || '',
                         submittedAt: data.submittedAt || null,
                     };
+                })
+                setRegs(updated_snap.filter(d => {
+                    if (d.status == 'rejected') return false
+                    return d
                 }));
             } catch {
                 // silently fail for public page
@@ -104,7 +108,12 @@ export default function LandingPage() {
         total: regs.length,
         confirmed: regs.filter(r => r.status === 'confirmed').length,
         pending: regs.filter(r => r.status === 'pending_verification').length,
-        totalSeats: regs.reduce((s, r) => s + (r.seats || 1), 0),
+        totalSeats: regs.reduce((s, r) => {
+            if (r.status != 'confirmed') {
+                return s
+            }
+            return s + (r.seats || 1)
+        }, 0),
     }), [regs]);
 
     const filteredRegs = useMemo(() => {
