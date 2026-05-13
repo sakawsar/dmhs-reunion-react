@@ -4,7 +4,7 @@ import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
 // Countdown to 28 May 2026 at 18:00 BDT (UTC+6)
-const EVENT_DATE = new Date('2026-05-30T18:00:00+06:00');
+const EVENT_DATE = new Date('2026-05-31T18:00:00+06:00');
 
 interface RegSummary {
     fullName: string;
