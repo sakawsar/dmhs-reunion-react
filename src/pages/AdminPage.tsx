@@ -161,7 +161,12 @@ function AdminDashboard() {
         total: regs.length,
         confirmed: regs.filter(r => r.status === 'confirmed').length,
         pending: regs.filter(r => r.status === 'pending_verification').length,
-        revenue: regs.reduce((s, r) => s + (r.totalAmount || 0), 0),
+        revenue: regs.reduce((s, r) => {
+            if (r.status == "rejected") {
+                return s
+            }
+            return s + (r.totalAmount || 0)
+        }, 0),
     }), [regs]);
 
     const toggleSort = (k: keyof Registration) => {
