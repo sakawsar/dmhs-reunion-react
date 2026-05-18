@@ -18,7 +18,7 @@ const PAYMENT_METHODS = [
         color: '#E2136E',
         bg: 'linear-gradient(135deg, #E2136E 0%, #a30d50 100%)',
         icon: '💳',
-        number: '01964-614377',
+        number: '01925-687201',
         dial: '*247#',
         action: 'পেমেন্ট',
     },

@@ -80,7 +80,7 @@ const Confirmation: React.FC<ConfirmationProps> = ({ data, ticketId, firestoreDo
                 lineHeight: '1.7'
             }}>
                 প্রশ্ন? যোগাযোগ করুন{' '}
-                <a href="tel:01964614377" style={{ color: 'var(--color-accent)' }}>01964-614377</a>
+                <a href="tel:01925687201" style={{ color: 'var(--color-accent)' }}>01925-687201</a>
                 {' '}অথবা{' '}
                 <a href="mailto:reunion@dmhs.edu.bd" style={{ color: 'var(--color-accent)' }}>reunion@dmhs.edu.bd</a>
             </div>
